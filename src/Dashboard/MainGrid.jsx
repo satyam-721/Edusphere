@@ -3,7 +3,7 @@ import RightSectionCard from "./RightSectionCard"
 
 export default function MainGrid(){
     return(
-        <div class="main-grid">
+        <div className="main-grid">
             <SectionCard/>
             <RightSectionCard/>
         </div>

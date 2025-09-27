@@ -5,7 +5,7 @@ import MainGrid from "./MainGrid"
 
 export default function App(){
     return(
-        <main class="content">
+        <main className="content">
             <Welcome/>
             <Status/>
             <MainGrid/>
