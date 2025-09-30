@@ -1,8 +1,8 @@
-import App from "./Dashboard/App"
+import App from "./Doubt/App"
 import Layout from "./Layouts/Layout";
 
 
-function Dashboard() {
+function Doubt() {
 
   return (
       <div className="main-container">
@@ -12,4 +12,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard;
+export default Doubt;
