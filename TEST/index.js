@@ -5,9 +5,11 @@ async function main() {
     const ai = new GoogleGenAI({apiKey: "AIzaSyBlxvRFKgVMho1xdtXHeSGaqBTxl4Rj2XY"});
 
     const texts = [
-        "What is the meaning of life?",
-        "What is the purpose of existence?",
-        "How do I bake a cake?",
+        "I don't understand how to apply F=ma when the mass is given in grams. Do I need to convert it first?",
+        "In the homework problem about the car, why do we use 1200kg for mass? How do I know what units to use?",
+        "When calculating force, my answer is always wrong. I think I'm making a mistake with the acceleration part.",
+        "Can you show me step by step how to solve F=ma problems? I get confused with the unit conversions."
+    
     ];
 
     const response = await ai.models.embedContent({

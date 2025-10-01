@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import cosineSimilarity from "compute-cosine-similarity";
 
-async function main() {
+async function Embeddings() {
     const ai = new GoogleGenAI({apiKey: "AIzaSyBlxvRFKgVMho1xdtXHeSGaqBTxl4Rj2XY"});
 
     const texts = [
@@ -28,4 +28,4 @@ async function main() {
     }
 }
 
-main();
+export default Embeddings;
