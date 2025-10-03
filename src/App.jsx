@@ -1,10 +1,10 @@
-import Home from "./Home/Home.jsx"
-
+// import Home from "./Home/Home.jsx"
+import Upload from "./Upload/Upload"
 function App() {
 
   return (
     <>
-    <Home/>
+    <Upload/>
     </>
   )
 }
