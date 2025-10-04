@@ -1,4 +1,4 @@
-export default function UploadAssignment(){
+export default function UploadAssignment({cancelUpload,handleFileUpload,removeFile,toggleAIEnhancement}){
     return(
         // <!-- Step 2: Upload Form for Assignment -->
         <div class="upload-form" id="assignmentForm">
@@ -15,18 +15,18 @@ export default function UploadAssignment(){
             </div>
 
             <div class="form-group">
-                <div class="upload-area" id="assignmentUploadArea" onclick="document.getElementById('assignmentFileInput').click()">
+                <div class="upload-area" id="assignmentUploadArea" onClick={()=>document.getElementById('assignmentFileInput').click()}>
                     <div class="upload-icon">📎</div>
                     <div class="upload-text">Upload Assignment File</div>
                     <div class="upload-hint">PDF, Word (Max 25MB)</div>
                 </div>
-                <input type="file" id="assignmentFileInput" accept=".pdf,.doc,.docx" onchange="handleFileUpload(this, 'assignment')"></input>
+                <input type="file" id="assignmentFileInput" accept=".pdf,.doc,.docx" onChange={()=>handleFileUpload(this, 'assignment')}></input>
                 <div class="file-preview" id="assignmentFilePreview">
                     <div class="file-info">
                         <div class="file-name" id="assignmentFileName"></div>
                         <div class="file-size" id="assignmentFileSize"></div>
                     </div>
-                    <button class="remove-file-btn" onclick="removeFile('assignment')">Remove</button>
+                    <button class="remove-file-btn" onClick={()=>removeFile('assignment')}>Remove</button>
                 </div>
             </div>
 
@@ -67,11 +67,11 @@ export default function UploadAssignment(){
             <div class="form-group">
                 <label class="form-label">Tags (Press Enter to add)</label>
                 <div class="tags-container" id="assignmentTagsContainer">
-                    <input type="text" class="tag-input" id="assignmentTagInput" placeholder="Add tags..." onkeypress="handleTagInput(event, 'assignment')"></input>
+                    <input type="text" class="tag-input" id="assignmentTagInput" placeholder="Add tags..." ></input>
                 </div>
             </div>
 
-            <div class="ai-enhancement" onclick="toggleAIEnhancement()">
+            <div class="ai-enhancement" onClick={toggleAIEnhancement}>
                 <div class="ai-icon">✨</div>
                 <div class="ai-text">
                     <div class="ai-title">AI-Powered Auto-Grading</div>
@@ -83,8 +83,10 @@ export default function UploadAssignment(){
             </div>
 
             <div class="action-buttons">
-                <button class="btn btn-secondary" onclick="cancelUpload()">Cancel</button>
-                <button class="btn btn-primary" onclick="previewContent()">Next: Preview</button>
+                <button class="btn btn-secondary" onClick={cancelUpload}>Cancel</button>
+                <button class="btn btn-primary" 
+                // onClick={previewContent}
+                >Next: Preview</button>
             </div>
         </div>
     )
