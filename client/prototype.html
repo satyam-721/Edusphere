@@ -1,0 +1,2092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFlow - AI Practice Sheet Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #202124;
+            background: #fafafa;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a73e8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            border-radius: 6px;
+        }
+
+        .breadcrumb {
+            color: #5f6368;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+            color: #5f6368;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-button:hover {
+            background: rgba(26, 115, 232, 0.08);
+            color: #1a73e8;
+        }
+
+        .nav-button .badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ea4335;
+            color: #fff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .profile-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .profile-menu:hover {
+            background: rgba(26, 115, 232, 0.08);
+        }
+
+        .profile-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 2rem 0;
+            position: fixed;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #5f6368;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 2rem;
+            color: #5f6368;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+            font-weight: 500;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(26, 115, 232, 0.08);
+            color: #1a73e8;
+            border-right-color: #1a73e8;
+        }
+
+        .sidebar-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            background: rgba(95, 99, 104, 0.1);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-item:hover .sidebar-icon,
+        .sidebar-item.active .sidebar-icon {
+            background: rgba(26, 115, 232, 0.1);
+            color: #1a73e8;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            color: #fff;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 115, 232, 0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-color: #1a73e8;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .stat-icon.created { background: linear-gradient(135deg, #1a73e8, #4285f4); }
+        .stat-icon.pending { background: linear-gradient(135deg, #fbbc04, #fdd835); }
+        .stat-icon.published { background: linear-gradient(135deg, #34a853, #46d160); }
+        .stat-icon.views { background: linear-gradient(135deg, #9c27b0, #e91e63); }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            color: #34a853;
+            font-weight: 500;
+            background: rgba(52, 168, 83, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #5f6368;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #e0e0e0;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .upload-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, #9c27b0, #e91e63);
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .upload-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .upload-card {
+            border: 2px dashed #e0e0e0;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-card:hover {
+            border-color: #1a73e8;
+            background: rgba(26, 115, 232, 0.02);
+        }
+
+        .upload-card.active {
+            border-color: #1a73e8;
+            border-style: solid;
+            background: rgba(26, 115, 232, 0.05);
+        }
+
+        .upload-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .upload-card-title {
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-card-desc {
+            color: #5f6368;
+            font-size: 0.9rem;
+        }
+
+        .upload-btn {
+            background: #1a73e8;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .upload-btn:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+        }
+
+        /* AI Generator Section */
+        .generator-section {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: none;
+        }
+
+        .generator-section.active {
+            display: block;
+        }
+
+        .generator-header {
+            background: linear-gradient(135deg, #9c27b0, #e91e63);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .generator-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .generating-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .customization-panel {
+            padding: 2rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .customization-title {
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 1.5rem;
+        }
+
+        .customization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .custom-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .custom-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #5f6368;
+        }
+
+        .custom-select, .custom-input {
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        .custom-select:focus, .custom-input:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .difficulty-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn:hover {
+            border-color: #1a73e8;
+            color: #1a73e8;
+        }
+
+        .difficulty-btn.active {
+            background: #1a73e8;
+            color: #fff;
+            border-color: #1a73e8;
+        }
+
+        .difficulty-btn.easy.active { background: #34a853; border-color: #34a853; }
+        .difficulty-btn.medium.active { background: #fbbc04; border-color: #fbbc04; }
+        .difficulty-btn.hard.active { background: #ea4335; border-color: #ea4335; }
+
+        .regenerate-btn {
+            background: linear-gradient(135deg, #9c27b0, #e91e63);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .regenerate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            padding: 2rem;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-title {
+            font-weight: 600;
+            color: #202124;
+            font-size: 1.1rem;
+        }
+
+        .question-types {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .type-badge {
+            background: rgba(26, 115, 232, 0.1);
+            color: #1a73e8;
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: #1a73e8;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: #1a73e8;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid #e0e0e0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            border-color: #1a73e8;
+            color: #1a73e8;
+            background: rgba(26, 115, 232, 0.05);
+        }
+
+        .question-text {
+            color: #202124;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .question-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .option-item {
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .option-item.correct {
+            background: rgba(52, 168, 83, 0.1);
+            border-color: #34a853;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            background: #fff;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-bar-left {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-bar-btn {
+            background: none;
+            border: 1px solid #e0e0e0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .action-bar-btn:hover {
+            border-color: #1a73e8;
+            color: #1a73e8;
+            background: rgba(26, 115, 232, 0.05);
+        }
+
+        .action-bar-btn.primary {
+            background: #1a73e8;
+            color: #fff;
+            border-color: #1a73e8;
+        }
+
+        .action-bar-btn.primary:hover {
+            background: #1557b0;
+        }
+
+        .action-bar-btn.success {
+            background: #34a853;
+            color: #fff;
+            border-color: #34a853;
+        }
+
+        .action-bar-btn.success:hover {
+            background: #2d9248;
+        }
+
+        /* History/Library Section */
+        .library-section {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .library-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .library-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #202124;
+        }
+
+        .library-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-chip {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-chip:hover, .filter-chip.active {
+            background: rgba(26, 115, 232, 0.08);
+            border-color: #1a73e8;
+            color: #1a73e8;
+        }
+
+        .library-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .library-item {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .library-item:hover {
+            background: #f8f9fa;
+        }
+
+        .library-item:last-child {
+            border-bottom: none;
+        }
+
+        .library-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .library-content {
+            flex: 1;
+        }
+
+        .library-item-title {
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 0.25rem;
+        }
+
+        .library-meta {
+            display: flex;
+            gap: 1rem;
+            color: #5f6368;
+            font-size: 0.85rem;
+        }
+
+        .library-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.draft {
+            background: rgba(251, 188, 4, 0.1);
+            color: #fbbc04;
+        }
+
+        .status-badge.published {
+            background: rgba(52, 168, 83, 0.1);
+            color: #34a853;
+        }
+
+        .status-badge.archived {
+            background: rgba(95, 99, 104, 0.1);
+            color: #5f6368;
+        }
+
+        .library-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .icon-btn:hover {
+            border-color: #1a73e8;
+            color: #1a73e8;
+            background: rgba(26, 115, 232, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .upload-options {
+                grid-template-columns: 1fr;
+            }
+
+            .customization-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .library-filters {
+                flex-wrap: wrap;
+            }
+
+            .library-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 90px;
+            right: 2rem;
+            background: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #34a853;
+            color: #202124;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 998;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            min-width: 320px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            border-left-color: #ea4335;
+        }
+
+        .notification.info {
+            border-left-color: #1a73e8;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* File Input Hidden */
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-left">
+                <a href="#" class="logo">EduFlow</a>
+                <div class="breadcrumb">AI Practice Sheet Generator</div>
+            </div>
+            <div class="nav-right">
+                <button class="nav-button" title="Notifications">🔔
+                    <span class="badge">3</span>
+                </button>
+                <button class="nav-button" title="Messages">💬</button>
+                <button class="nav-button" title="Settings">⚙️</button>
+                <div class="profile-menu">
+                    <div class="profile-avatar">JD</div>
+                    <span style="font-weight: 500; color: #202124;">John Doe</span>
+                    <span style="color: #5f6368; margin-left: 0.25rem;">▼</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Navigation</div>
+                <a href="#" class="sidebar-item">
+                    <div class="sidebar-icon">◐</div>
+                    <span>Assignments</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <div class="sidebar-icon">◒</div>
+                    <span>Gradebook</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">AI Tools</div>
+                <a href="#" class="sidebar-item">
+                    <div class="sidebar-icon">🤖</div>
+                    <span>AI Generator</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <div class="sidebar-icon">📚</div>
+                    <span>My Library</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <div class="sidebar-icon">📊</div>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <div class="sidebar-icon">⚙️</div>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="header-content">
+                    <h1 class="header-title">AI Practice Sheet Generator</h1>
+                    <p class="header-subtitle">Create custom practice sheets in seconds using AI-powered content generation</p>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon created">📄</div>
+                        <div class="stat-trend">+8 this month</div>
+                    </div>
+                    <div class="stat-value">42</div>
+                    <div class="stat-label">Sheets Created</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon pending">⏳</div>
+                        <div class="stat-trend">3 drafts</div>
+                    </div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Pending Review</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon published">✅</div>
+                        <div class="stat-trend">+12 this week</div>
+                    </div>
+                    <div class="stat-value">37</div>
+                    <div class="stat-label">Published Sheets</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon views">👁️</div>
+                        <div class="stat-trend">+156 today</div>
+                    </div>
+                    <div class="stat-value">2.4K</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2 class="upload-title">
+                    Upload or Select Lesson 
+                    <span class="ai-badge">AI Powered</span>
+                </h2>
+                <div class="upload-options">
+                    <div class="upload-card" onclick="handleUpload('new')">
+                        <div class="upload-icon">📤</div>
+                        <div class="upload-card-title">Upload New Lesson</div>
+                        <div class="upload-card-desc">Upload text, PDF, or video transcript</div>
+                        <button class="upload-btn" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">Choose File</button>
+                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" onchange="processFile(this)">
+                    </div>
+                    <div class="upload-card" onclick="handleUpload('existing')">
+                        <div class="upload-icon">📚</div>
+                        <div class="upload-card-title">Select Existing Lesson</div>
+                        <div class="upload-card-desc">Choose from your lesson library</div>
+                        <button class="upload-btn" onclick="event.stopPropagation(); showLessonLibrary()">Browse Lessons</button>
+                    </div>
+                    <div class="upload-card" onclick="handleUpload('paste')">
+                        <div class="upload-icon">📋</div>
+                        <div class="upload-card-title">Paste Content</div>
+                        <div class="upload-card-desc">Paste lesson text directly</div>
+                        <button class="upload-btn" onclick="event.stopPropagation(); showPasteDialog()">Paste Text</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Generator Section (Hidden initially) -->
+            <div class="generator-section" id="generatorSection">
+                <div class="generator-header">
+                    <div class="generator-title">
+                        🤖 AI Practice Sheet Generator
+                    </div>
+                    <div class="generating-indicator" id="generatingIndicator" style="display: none;">
+                        <div class="spinner"></div>
+                        <span>Generating questions...</span>
+                    </div>
+                </div>
+
+                <!-- Customization Panel -->
+                <div class="customization-panel">
+                    <h3 class="customization-title">Customize Your Practice Sheet</h3>
+                    <div class="customization-grid">
+                        <div class="custom-group">
+                            <label class="custom-label">Number of Questions</label>
+                            <select class="custom-select" id="questionCount">
+                                <option value="10">10 Questions</option>
+                                <option value="15">15 Questions</option>
+                                <option value="20" selected>20 Questions</option>
+                                <option value="30">30 Questions</option>
+                                <option value="40">40 Questions</option>
+                            </select>
+                        </div>
+                        <div class="custom-group">
+                            <label class="custom-label">Difficulty Level</label>
+                            <div class="difficulty-buttons">
+                                <button class="difficulty-btn easy" onclick="setDifficulty('easy')">Easy</button>
+                                <button class="difficulty-btn medium active" onclick="setDifficulty('medium')">Medium</button>
+                                <button class="difficulty-btn hard" onclick="setDifficulty('hard')">Hard</button>
+                            </div>
+                        </div>
+                        <div class="custom-group">
+                            <label class="custom-label">Question Types</label>
+                            <select class="custom-select" id="questionTypes">
+                                <option value="mixed" selected>Mixed (All Types)</option>
+                                <option value="mcq">Multiple Choice Only</option>
+                                <option value="truefalse">True/False Only</option>
+                                <option value="short">Short Answer Only</option>
+                                <option value="fillblanks">Fill in the Blanks</option>
+                            </select>
+                        </div>
+                        <div class="custom-group">
+                            <label class="custom-label">Subject/Topic</label>
+                            <input type="text" class="custom-input" placeholder="e.g., Physics - Newton's Laws" id="topicInput">
+                        </div>
+                    </div>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                        <button class="regenerate-btn" onclick="generateQuestions()">
+                            <span>✨</span>
+                            <span>Generate Practice Sheet</span>
+                        </button>
+                        <button class="action-bar-btn" onclick="regenerateQuestions()">
+                            🔄 Regenerate All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preview Panel -->
+                <div class="preview-panel" id="previewPanel" style="display: none;">
+                    <div class="preview-header">
+                        <div>
+                            <div class="preview-title">Generated Practice Sheet Preview</div>
+                            <div class="question-types" style="margin-top: 0.5rem;">
+                                <span class="type-badge">MCQ: 8</span>
+                                <span class="type-badge">True/False: 4</span>
+                                <span class="type-badge">Short Answer: 5</span>
+                                <span class="type-badge">Fill Blanks: 3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="questions-list" id="questionsList">
+                        <!-- Questions will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="action-bar" id="actionBar" style="display: none;">
+                    <div class="action-bar-left">
+                        <button class="action-bar-btn" onclick="saveDraft()">💾 Save as Draft</button>
+                        <button class="action-bar-btn" onclick="exportSheet()">📥 Export PDF</button>
+                        <button class="action-bar-btn" onclick="exportSheet('doc')">📄 Export DOC</button>
+                    </div>
+                    <button class="action-bar-btn success" onclick="publishSheet()">🚀 Publish to Class</button>
+                </div>
+            </div>
+
+            <!-- History/Library Section -->
+            <div class="library-section">
+                <div class="library-header">
+                    <h2 class="library-title">My Practice Sheets Library</h2>
+                    <div class="library-filters">
+                        <button class="filter-chip active" onclick="filterLibrary('all')">All</button>
+                        <button class="filter-chip" onclick="filterLibrary('published')">Published</button>
+                        <button class="filter-chip" onclick="filterLibrary('draft')">Drafts</button>
+                        <button class="filter-chip" onclick="filterLibrary('archived')">Archived</button>
+                    </div>
+                </div>
+                <div class="library-list" id="libraryList">
+                    <div class="library-item" data-status="published">
+                        <div class="library-icon">📝</div>
+                        <div class="library-content">
+                            <div class="library-item-title">Newton's Laws of Motion - Practice Sheet</div>
+                            <div class="library-meta">
+                                <span>📚 Physics Grade 10</span>
+                                <span>📊 25 Questions</span>
+                                <span>📅 Sep 25, 2024</span>
+                                <span>👁️ 156 views</span>
+                            </div>
+                        </div>
+                        <div class="library-status">
+                            <span class="status-badge published">Published</span>
+                            <div class="library-actions">
+                                <button class="icon-btn" title="View">👁️</button>
+                                <button class="icon-btn" title="Edit">✏️</button>
+                                <button class="icon-btn" title="Duplicate">📋</button>
+                                <button class="icon-btn" title="Delete">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="library-item" data-status="draft">
+                        <div class="library-icon">📝</div>
+                        <div class="library-content">
+                            <div class="library-item-title">Chemical Bonding - MCQ Practice</div>
+                            <div class="library-meta">
+                                <span>📚 Chemistry Grade 11</span>
+                                <span>📊 15 Questions</span>
+                                <span>📅 Sep 28, 2024</span>
+                                <span>⏰ Draft</span>
+                            </div>
+                        </div>
+                        <div class="library-status">
+                            <span class="status-badge draft">Draft</span>
+                            <div class="library-actions">
+                                <button class="icon-btn" title="Continue Editing">✏️</button>
+                                <button class="icon-btn" title="Delete">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="library-item" data-status="published">
+                        <div class="library-icon">📝</div>
+                        <div class="library-content">
+                            <div class="library-item-title">Quadratic Equations - Comprehensive Test</div>
+                            <div class="library-meta">
+                                <span>📚 Mathematics Grade 10</span>
+                                <span>📊 30 Questions</span>
+                                <span>📅 Sep 20, 2024</span>
+                                <span>👁️ 203 views</span>
+                            </div>
+                        </div>
+                        <div class="library-status">
+                            <span class="status-badge published">Published</span>
+                            <div class="library-actions">
+                                <button class="icon-btn" title="View">👁️</button>
+                                <button class="icon-btn" title="Edit">✏️</button>
+                                <button class="icon-btn" title="Duplicate">📋</button>
+                                <button class="icon-btn" title="Archive">📦</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="library-item" data-status="published">
+                        <div class="library-icon">📝</div>
+                        <div class="library-content">
+                            <div class="library-item-title">Photosynthesis Process - Quick Quiz</div>
+                            <div class="library-meta">
+                                <span>📚 Biology Grade 9</span>
+                                <span>📊 10 Questions</span>
+                                <span>📅 Sep 18, 2024</span>
+                                <span>👁️ 89 views</span>
+                            </div>
+                        </div>
+                        <div class="library-status">
+                            <span class="status-badge published">Published</span>
+                            <div class="library-actions">
+                                <button class="icon-btn" title="View">👁️</button>
+                                <button class="icon-btn" title="Edit">✏️</button>
+                                <button class="icon-btn" title="Duplicate">📋</button>
+                                <button class="icon-btn" title="Archive">📦</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="library-item" data-status="archived">
+                        <div class="library-icon">📝</div>
+                        <div class="library-content">
+                            <div class="library-item-title">Basic Algebra - Revision Sheet</div>
+                            <div class="library-meta">
+                                <span>📚 Mathematics Grade 8</span>
+                                <span>📊 20 Questions</span>
+                                <span>📅 Sep 10, 2024</span>
+                                <span>📦 Archived</span>
+                            </div>
+                        </div>
+                        <div class="library-status">
+                            <span class="status-badge archived">Archived</span>
+                            <div class="library-actions">
+                                <button class="icon-btn" title="Restore">↩️</button>
+                                <button class="icon-btn" title="Delete">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <strong>Welcome!</strong> Ready to create AI-powered practice sheets for your students.
+    </div>
+
+    <script>
+        let currentDifficulty = 'medium';
+        let generatedQuestions = [];
+
+        // Sample questions database
+        const sampleQuestions = {
+            mcq: [
+                {
+                    type: 'MCQ',
+                    question: 'According to Newton\'s Second Law, what is the relationship between force, mass, and acceleration?',
+                    options: ['F = m + a', 'F = m × a', 'F = m ÷ a', 'F = m - a'],
+                    correct: 1
+                },
+                {
+                    type: 'MCQ',
+                    question: 'Which of the following is an example of Newton\'s Third Law?',
+                    options: ['A car accelerating', 'A rocket propelling upward', 'An object at rest', 'Friction slowing motion'],
+                    correct: 1
+                }
+            ],
+            truefalse: [
+                {
+                    type: 'True/False',
+                    question: 'An object in motion will stay in motion unless acted upon by an external force.',
+                    answer: true
+                },
+                {
+                    type: 'True/False',
+                    question: 'Force and acceleration are inversely proportional when mass is constant.',
+                    answer: false
+                }
+            ],
+            short: [
+                {
+                    type: 'Short Answer',
+                    question: 'Explain Newton\'s First Law of Motion in your own words.',
+                    points: 3
+                },
+                {
+                    type: 'Short Answer',
+                    question: 'Calculate the force required to accelerate a 5kg object at 2m/s². Show your work.',
+                    points: 5
+                }
+            ],
+            fillblanks: [
+                {
+                    type: 'Fill in the Blanks',
+                    question: 'Newton\'s Second Law states that Force equals _____ times _____.',
+                    answers: ['mass', 'acceleration']
+                }
+            ]
+        };
+
+        // Show notification on load
+        setTimeout(() => {
+            showNotification('info', 'Welcome! Ready to create AI-powered practice sheets for your students.');
+        }, 1000);
+
+        // Handle upload type selection
+        function handleUpload(type) {
+            document.querySelectorAll('.upload-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            if (type === 'new') {
+                showNotification('info', 'Please select a file to upload');
+            } else if (type === 'existing') {
+                showNotification('info', 'Loading your lesson library...');
+            } else if (type === 'paste') {
+                showNotification('info', 'Opening text input dialog...');
+            }
+        }
+
+        // Process uploaded file
+        function processFile(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                showNotification('info', `Processing ${file.name}...`);
+                
+                setTimeout(() => {
+                    document.getElementById('generatorSection').classList.add('active');
+                    document.getElementById('generatorSection').scrollIntoView({ behavior: 'smooth' });
+                    showNotification('success', `${file.name} uploaded successfully! Configure and generate questions below.`);
+                }, 1500);
+            }
+        }
+
+        // Show lesson library
+        function showLessonLibrary() {
+            showNotification('info', 'Opening lesson library...');
+            setTimeout(() => {
+                document.getElementById('generatorSection').classList.add('active');
+                document.getElementById('generatorSection').scrollIntoView({ behavior: 'smooth' });
+                showNotification('success', 'Lesson selected! Configure and generate questions below.');
+            }, 1000);
+        }
+
+        // Show paste dialog
+        function showPasteDialog() {
+            const text = prompt('Paste your lesson content here:');
+            if (text && text.trim()) {
+                showNotification('info', 'Processing your content...');
+                setTimeout(() => {
+                    document.getElementById('generatorSection').classList.add('active');
+                    document.getElementById('generatorSection').scrollIntoView({ behavior: 'smooth' });
+                    showNotification('success', 'Content processed! Configure and generate questions below.');
+                }, 1000);
+            }
+        }
+
+        // Set difficulty level
+        function setDifficulty(level) {
+            currentDifficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.difficulty-btn.${level}`).classList.add('active');
+        }
+
+        // Generate questions
+        function generateQuestions() {
+            const count = parseInt(document.getElementById('questionCount').value);
+            const type = document.getElementById('questionTypes').value;
+            const topic = document.getElementById('topicInput').value || 'General';
+
+            // Show generating indicator
+            document.getElementById('generatingIndicator').style.display = 'flex';
+            showNotification('info', `Generating ${count} ${currentDifficulty} level questions...`);
+
+            setTimeout(() => {
+                generatedQuestions = [];
+                const questionsList = document.getElementById('questionsList');
+                questionsList.innerHTML = '';
+
+                // Generate mixed questions
+                const mcqCount = Math.floor(count * 0.4);
+                const tfCount = Math.floor(count * 0.2);
+                const shortCount = Math.floor(count * 0.25);
+                const fillCount = count - mcqCount - tfCount - shortCount;
+
+                let questionNumber = 1;
+
+                // Add MCQs
+                for (let i = 0; i < mcqCount; i++) {
+                    const q = sampleQuestions.mcq[i % sampleQuestions.mcq.length];
+                    addQuestionToPreview(questionNumber++, q);
+                }
+
+                // Add True/False
+                for (let i = 0; i < tfCount; i++) {
+                    const q = sampleQuestions.truefalse[i % sampleQuestions.truefalse.length];
+                    addQuestionToPreview(questionNumber++, q);
+                }
+
+                // Add Short Answer
+                for (let i = 0; i < shortCount; i++) {
+                    const q = sampleQuestions.short[i % sampleQuestions.short.length];
+                    addQuestionToPreview(questionNumber++, q);
+                }
+
+                // Add Fill in the Blanks
+                for (let i = 0; i < fillCount; i++) {
+                    const q = sampleQuestions.fillblanks[i % sampleQuestions.fillblanks.length];
+                    addQuestionToPreview(questionNumber++, q);
+                }
+
+                // Hide generating indicator and show preview
+                document.getElementById('generatingIndicator').style.display = 'none';
+                document.getElementById('previewPanel').style.display = 'block';
+                document.getElementById('actionBar').style.display = 'flex';
+                
+                showNotification('success', `Successfully generated ${count} questions!`);
+                
+                setTimeout(() => {
+                    document.getElementById('previewPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 500);
+            }, 2500);
+        }
+
+        // Add question to preview
+        function addQuestionToPreview(number, question) {
+            const questionsList = document.getElementById('questionsList');
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card fade-in';
+            
+            let optionsHTML = '';
+            if (question.options) {
+                optionsHTML = '<div class="question-options">' +
+                    question.options.map((opt, idx) => 
+                        `<div class="option-item ${idx === question.correct ? 'correct' : ''}">${String.fromCharCode(65 + idx)}. ${opt}</div>`
+                    ).join('') +
+                    '</div>';
+            } else if (question.answer !== undefined) {
+                optionsHTML = `<div class="question-options">
+                    <div class="option-item ${question.answer ? 'correct' : ''}">True</div>
+                    <div class="option-item ${!question.answer ? 'correct' : ''}">False</div>
+                </div>`;
+            } else if (question.points) {
+                optionsHTML = `<div style="color: #5f6368; font-size: 0.85rem; font-style: italic;">
+                    [${question.points} points] - Answer space will be provided
+                </div>`;
+            } else if (question.answers) {
+                optionsHTML = `<div style="color: #5f6368; font-size: 0.85rem; font-style: italic;">
+                    Answers: ${question.answers.join(', ')}
+                </div>`;
+            }
+
+            questionCard.innerHTML = `
+                <div class="question-header">
+                    <div>
+                        <span class="question-number">Question ${number}</span>
+                        <span class="type-badge" style="margin-left: 0.5rem;">${question.type}</span>
+                    </div>
+                    <div class="question-actions">
+                        <button class="action-btn" onclick="editQuestion(${number})">✏️ Edit</button>
+                        <button class="action-btn" onclick="regenerateQuestion(${number})">🔄 Regenerate</button>
+                        <button class="action-btn" onclick="deleteQuestion(${number})">🗑️ Delete</button>
+                    </div>
+                </div>
+                <div class="question-text">${question.question}</div>
+                ${optionsHTML}
+            `;
+
+            questionsList.appendChild(questionCard);
+            generatedQuestions.push(question);
+        }
+
+        // Regenerate all questions
+        function regenerateQuestions() {
+            showNotification('info', 'Regenerating all questions with new variations...');
+            generateQuestions();
+        }
+
+        // Edit question
+        function editQuestion(number) {
+            showNotification('info', `Opening editor for Question ${number}...`);
+        }
+
+        // Regenerate single question
+        function regenerateQuestion(number) {
+            showNotification('info', `Regenerating Question ${number}...`);
+        }
+
+        // Delete question
+        function deleteQuestion(number) {
+            if (confirm(`Delete Question ${number}?`)) {
+                showNotification('success', `Question ${number} deleted`);
+            }
+        }
+
+        // Save as draft
+        function saveDraft() {
+            showNotification('info', 'Saving practice sheet as draft...');
+            setTimeout(() => {
+                showNotification('success', 'Practice sheet saved as draft successfully!');
+            }, 1000);
+        }
+
+        // Export sheet
+        function exportSheet(format = 'pdf') {
+            const formatName = format.toUpperCase();
+            showNotification('info', `Preparing ${formatName} export...`);
+            setTimeout(() => {
+                showNotification('success', `Practice sheet exported as ${formatName}! Download starting...`);
+            }, 1500);
+        }
+
+        // Publish sheet
+        function publishSheet() {
+            const topic = document.getElementById('topicInput').value || 'Practice Sheet';
+            showNotification('info', 'Publishing to class...');
+            setTimeout(() => {
+                showNotification('success', `"${topic}" published successfully! Students can now access it.`);
+            }, 1500);
+        }
+
+        // Filter library
+        function filterLibrary(filter) {
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const items = document.querySelectorAll('.library-item');
+            items.forEach(item => {
+                if (filter === 'all') {
+                    item.style.display = 'flex';
+                } else {
+                    const status = item.dataset.status;
+                    item.style.display = status === filter ? 'flex' : 'none';
+                }
+            });
+
+            showNotification('info', `Showing ${filter} practice sheets`);
+        }
+
+        // Show notification
+        function showNotification(type, message) {
+            const notification = document.getElementById('notification');
+            notification.className = `notification ${type}`;
+            
+            const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+            const labels = { success: 'Success', error: 'Error', info: 'Info' };
+            
+            notification.innerHTML = `<strong>${icons[type]} ${labels[type]}:</strong> ${message}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, type === 'error' ? 4000 : 3000);
+        }
+
+        // Interactive stat cards
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const label = card.querySelector('.stat-label').textContent;
+                showNotification('info', `Loading detailed ${label.toLowerCase()}...`);
+            });
+        });
+
+        // Library item actions
+        document.querySelectorAll('.icon-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const title = btn.getAttribute('title');
+                const itemTitle = btn.closest('.library-item').querySelector('.library-item-title').textContent;
+                showNotification('info', `${title}: ${itemTitle.substring(0, 30)}...`);
+            });
+        });
+
+        // Library item click
+        document.querySelectorAll('.library-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const title = item.querySelector('.library-item-title').textContent;
+                showNotification('info', `Opening: ${title}`);
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + S to save draft
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                if (document.getElementById('actionBar').style.display === 'flex') {
+                    saveDraft();
+                }
+            }
+            // Ctrl/Cmd + P to publish
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                if (document.getElementById('actionBar').style.display === 'flex') {
+                    publishSheet();
+                }
+            }
+            // Ctrl/Cmd + E to export
+            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                e.preventDefault();
+                if (document.getElementById('actionBar').style.display === 'flex') {
+                    exportSheet();
+                }
+            }
+        });
+
+        // Auto-save functionality
+        let autoSaveTimer;
+        function startAutoSave() {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => {
+                if (generatedQuestions.length > 0) {
+                    console.log('Auto-saving draft...');
+                    // In production, this would save to backend
+                }
+            }, 30000); // Auto-save every 30 seconds
+        }
+
+        // Watch for changes
+        ['questionCount', 'questionTypes', 'topicInput'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('change', () => {
+                    startAutoSave();
+                });
+            }
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const updates = [
+                'New practice sheet published by Sarah Johnson',
+                'Student feedback: 92% found your last sheet helpful',
+                'AI model updated with improved question generation',
+                'Tip: Use difficulty mixing for better learning outcomes'
+            ];
+            
+            if (Math.random() > 0.85) { // 15% chance every 45 seconds
+                const randomUpdate = updates[Math.floor(Math.random() * updates.length)];
+                showNotification('info', randomUpdate);
+            }
+        }, 45000);
+
+        // Progressive enhancement for file upload
+        const fileInput = document.getElementById('fileInput');
+        if (fileInput) {
+            // Drag and drop support
+            const uploadCards = document.querySelectorAll('.upload-card');
+            uploadCards.forEach(card => {
+                card.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    card.style.borderColor = '#1a73e8';
+                    card.style.background = 'rgba(26, 115, 232, 0.05)';
+                });
+
+                card.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    card.style.borderColor = '';
+                    card.style.background = '';
+                });
+
+                card.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    card.style.borderColor = '';
+                    card.style.background = '';
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        fileInput.files = files;
+                        processFile(fileInput);
+                    }
+                });
+            });
+        }
+
+        // Smart question preview with collapsible sections
+        function toggleQuestionDetails(element) {
+            const details = element.querySelector('.question-details');
+            if (details) {
+                details.style.display = details.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Export progress tracking
+        function trackExportProgress(format) {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 20;
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    showNotification('success', `${format.toUpperCase()} export completed!`);
+                } else {
+                    console.log(`Export progress: ${progress}%`);
+                }
+            }, 300);
+        }
+
+        // AI suggestion improvements
+        function getSuggestions() {
+            const suggestions = [
+                'Consider adding more higher-order thinking questions',
+                'Mix question types for better engagement',
+                'Add visual elements to complex questions',
+                'Include real-world application scenarios',
+                'Balance between recall and application questions'
+            ];
+            return suggestions[Math.floor(Math.random() * suggestions.length)];
+        }
+
+        // Question analytics
+        function analyzeQuestions() {
+            if (generatedQuestions.length > 0) {
+                const types = {};
+                generatedQuestions.forEach(q => {
+                    types[q.type] = (types[q.type] || 0) + 1;
+                });
+                
+                console.log('Question Distribution:', types);
+                return types;
+            }
+        }
+
+        // Smart difficulty adjustment
+        function adjustDifficulty(targetDifficulty) {
+            showNotification('info', `Adjusting all questions to ${targetDifficulty} level...`);
+            setTimeout(() => {
+                showNotification('success', 'Questions difficulty adjusted successfully!');
+            }, 1500);
+        }
+
+        // Batch operations
+        function selectAllQuestions() {
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.style.background = 'rgba(26, 115, 232, 0.05)';
+            });
+            showNotification('info', 'All questions selected. Choose an action.');
+        }
+
+        function deselectAllQuestions() {
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.style.background = '';
+            });
+        }
+
+        // Question quality checker
+        function checkQuestionQuality() {
+            const issues = [];
+            generatedQuestions.forEach((q, idx) => {
+                if (q.question.length < 10) {
+                    issues.push(`Question ${idx + 1}: Too short`);
+                }
+                if (q.options && q.options.some(opt => opt.length < 2)) {
+                    issues.push(`Question ${idx + 1}: Options too brief`);
+                }
+            });
+
+            if (issues.length > 0) {
+                showNotification('error', `Quality check found ${issues.length} issues. Review recommended.`);
+            } else {
+                showNotification('success', 'All questions passed quality check!');
+            }
+        }
+
+        // Template system
+        const templates = {
+            'quick-quiz': { count: 10, difficulty: 'easy', types: 'mcq' },
+            'comprehensive-test': { count: 30, difficulty: 'medium', types: 'mixed' },
+            'advanced-assessment': { count: 40, difficulty: 'hard', types: 'mixed' }
+        };
+
+        function applyTemplate(templateName) {
+            const template = templates[templateName];
+            if (template) {
+                document.getElementById('questionCount').value = template.count;
+                setDifficulty(template.difficulty);
+                document.getElementById('questionTypes').value = template.types;
+                showNotification('success', `Applied ${templateName} template settings`);
+            }
+        }
+
+        // Collaboration features
+        function shareWithColleague() {
+            const shareLink = `https://eduflow.com/share/${Math.random().toString(36).substr(2, 9)}`;
+            showNotification('success', `Share link copied: ${shareLink}`);
+        }
+
+        // Version history
+        const versionHistory = [];
+        function saveVersion() {
+            const version = {
+                timestamp: new Date().toISOString(),
+                questions: [...generatedQuestions],
+                settings: {
+                    difficulty: currentDifficulty,
+                    count: document.getElementById('questionCount').value
+                }
+            };
+            versionHistory.push(version);
+            showNotification('success', 'Version saved. You can restore it later.');
+        }
+
+        function restoreVersion(index) {
+            if (versionHistory[index]) {
+                generatedQuestions = [...versionHistory[index].questions];
+                showNotification('success', 'Version restored successfully!');
+            }
+        }
+
+        // Student performance prediction
+        function predictPerformance() {
+            const avgDifficulty = currentDifficulty === 'easy' ? 85 : currentDifficulty === 'medium' ? 72 : 58;
+            const variance = Math.random() * 10 - 5;
+            const predicted = Math.round(avgDifficulty + variance);
+            
+            showNotification('info', `AI predicts average student score: ${predicted}% based on difficulty and question types`);
+        }
+
+        // Accessibility checker
+        function checkAccessibility() {
+            const issues = [];
+            generatedQuestions.forEach((q, idx) => {
+                if (q.question.length > 200) {
+                    issues.push(`Q${idx + 1}: Consider breaking into smaller questions`);
+                }
+            });
+
+            if (issues.length === 0) {
+                showNotification('success', 'Practice sheet meets accessibility standards!');
+            } else {
+                showNotification('info', `${issues.length} accessibility suggestions available`);
+            }
+        }
+
+        // Smart scheduling
+        function schedulePublish() {
+            const date = prompt('Schedule publish date (YYYY-MM-DD):');
+            const time = prompt('Schedule publish time (HH:MM):');
+            
+            if (date && time) {
+                showNotification('success', `Practice sheet scheduled for ${date} at ${time}`);
+            }
+        }
+
+        // AI learning from feedback
+        function submitFeedback(questionId, feedbackType) {
+            showNotification('success', 'Thank you! AI will improve question generation based on your feedback.');
+        }
+
+        // Quick actions toolbar
+        function createQuickActionsToolbar() {
+            const toolbar = document.createElement('div');
+            toolbar.style.cssText = `
+                position: fixed;
+                bottom: 6rem;
+                right: 2rem;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+                padding: 1rem;
+                display: none;
+                flex-direction: column;
+                gap: 0.5rem;
+                z-index: 999;
+            `;
+            
+            const actions = [
+                { icon: '📊', label: 'Analytics', action: analyzeQuestions },
+                { icon: '✓', label: 'Quality Check', action: checkQuestionQuality },
+                { icon: '🎯', label: 'Predict Score', action: predictPerformance },
+                { icon: '♿', label: 'Accessibility', action: checkAccessibility },
+                { icon: '📅', label: 'Schedule', action: schedulePublish }
+            ];
+            
+            actions.forEach(({icon, label, action}) => {
+                const btn = document.createElement('button');
+                btn.innerHTML = `${icon} ${label}`;
+                btn.style.cssText = `
+                    background: none;
+                    border: 1px solid #e0e0e0;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 0.85rem;
+                    text-align: left;
+                    transition: all 0.3s ease;
+                `;
+                btn.onmouseover = () => btn.style.background = 'rgba(26,115,232,0.05)';
+                btn.onmouseout = () => btn.style.background = 'none';
+                btn.onclick = action;
+                toolbar.appendChild(btn);
+            });
+            
+            document.body.appendChild(toolbar);
+            
+            // Show toolbar when questions are generated
+            const observer = new MutationObserver(() => {
+                if (document.getElementById('actionBar').style.display === 'flex') {
+                    toolbar.style.display = 'flex';
+                } else {
+                    toolbar.style.display = 'none';
+                }
+            });
+            
+            observer.observe(document.getElementById('actionBar'), {
+                attributes: true,
+                attributeFilter: ['style']
+            });
+        }
+
+        // Initialize quick actions toolbar
+        createQuickActionsToolbar();
+
+        // Print optimization
+        window.addEventListener('beforeprint', () => {
+            document.querySelector('.sidebar').style.display = 'none';
+            document.querySelector('.header').style.display = 'none';
+            document.querySelector('.action-bar').style.display = 'none';
+        });
+
+        window.addEventListener('afterprint', () => {
+            document.querySelector('.sidebar').style.display = 'block';
+            document.querySelector('.header').style.display = 'block';
+            document.querySelector('.action-bar').style.display = 'flex';
+        });
+
+        // Performance monitoring
+        if ('PerformanceObserver' in window) {
+            const perfObserver = new PerformanceObserver((entryList) => {
+                for (const entry of entryList.getEntries()) {
+                    if (entry.duration > 1000) {
+                        console.warn(`Slow operation detected: ${entry.name} took ${entry.duration}ms`);
+                    }
+                }
+            });
+            perfObserver.observe({ entryTypes: ['measure'] });
+        }
+
+        // Error boundary
+        window.addEventListener('error', (e) => {
+            console.error('Application error:', e.error);
+            showNotification('error', 'An error occurred. Please try again or contact support.');
+        });
+
+        // Service worker for offline support (placeholder)
+        if ('serviceWorker' in navigator) {
+            // navigator.serviceWorker.register('/sw.js')
+            //     .then(reg => console.log('Service Worker registered', reg))
+            //     .catch(err => console.log('Service Worker registration failed', err));
+        }
+
+        // Initialize tooltips
+        document.querySelectorAll('[title]').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                const tooltip = document.createElement('div');
+                tooltip.textContent = this.getAttribute('title');
+                tooltip.style.cssText = `
+                    position: absolute;
+                    background: #202124;
+                    color: #fff;
+                    padding: 0.5rem;
+                    border-radius: 4px;
+                    font-size: 0.8rem;
+                    z-index: 10000;
+                    pointer-events: none;
+                `;
+                document.body.appendChild(tooltip);
+                
+                const rect = this.getBoundingClientRect();
+                tooltip.style.top = (rect.top - tooltip.offsetHeight - 5) + 'px';
+                tooltip.style.left = (rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+                
+                this._tooltip = tooltip;
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                if (this._tooltip) {
+                    this._tooltip.remove();
+                    delete this._tooltip;
+                }
+            });
+        });
+
+        console.log('%c🎓 EduFlow AI Practice Sheet Generator', 'color: #1a73e8; font-size: 16px; font-weight: bold;');
+        console.log('%cVersion 1.0.0 - Ready to create amazing practice sheets!', 'color: #5f6368; font-size: 12px;');
+    </script>
+</body>
+</html>sidebar-icon">□</div>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <div class="sidebar-icon">▤</div>
+                    <span>My Classes</span>
+                </a>
+                <a href="#" class="sidebar-item active">
+                    <div class="sidebar-icon">📝</div>
+                    <span>Practice Sheets</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <div class="
