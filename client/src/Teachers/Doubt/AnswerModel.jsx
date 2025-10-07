@@ -20,22 +20,22 @@ export default function AnswerModel(props){
             </div>
             
             {/* <!-- Answer Section --> */}
-            <div class="answer-section">
-                <div class="answer-title">
+            <div className="answer-section">
+                <div className="answer-title">
                     Your Response
                     <span className="ai-badge" style={{ fontSize: '0.7rem' }}>AI-Assisted</span>
                 </div>
                 <textarea 
-                    class="answer-textarea" 
+                    className="answer-textarea" 
                     placeholder="Type your answer here... (AI suggestions will appear as you type)"
                     id="answerText"
                 ></textarea>
                 
-                <div class="answer-actions">
-                    <button class="attachment-btn">📎 Attach Files</button>
-                    <button class="ai-suggest-btn">🤖 AI Suggest</button>
-                    <button class="faq-btn">📚 Save to FAQ</button>
-                    <button class="send-btn" id="sendAnswer">Send to All Students</button>
+                <div className="answer-actions">
+                    <button className="attachment-btn">📎 Attach Files</button>
+                    <button className="ai-suggest-btn">🤖 AI Suggest</button>
+                    <button className="faq-btn">📚 Save to FAQ</button>
+                    <button className="send-btn" id="sendAnswer">Send to All Students</button>
                 </div>
             </div>
             

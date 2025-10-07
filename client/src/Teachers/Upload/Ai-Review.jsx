@@ -101,13 +101,13 @@ export default function AiReview({showNotification,generatedQuestions,approvedQu
     
     return(
         // <!-- Step 3: AI Review Panel -->
-        <div class="ai-review-panel" id="aiReviewPanel">
-            <div class="ai-review-header">
-                <div class="ai-review-title">
+        <div className="ai-review-panel" id="aiReviewPanel">
+            <div className="ai-review-header">
+                <div className="ai-review-title">
                     AI Generated Questions
-                    <span class="ai-badge">AI Powered</span>
+                    <span className="ai-badge">AI Powered</span>
                 </div>
-                <button class="regenerate-btn" onClick={regenerateQuestions}>
+                <button className="regenerate-btn" onClick={regenerateQuestions}>
                     🔄 Regenerate All
                 </button>
             </div>
@@ -116,17 +116,17 @@ export default function AiReview({showNotification,generatedQuestions,approvedQu
                 <strong>Review Instructions:</strong> Check each question below. You can approve ✓, edit ✏️, or remove ✗ questions. Click "Add Question" to create custom ones.
             </div>
 
-            <div class="questions-list" id="aiQuestionsList">
+            <div className="questions-list" id="aiQuestionsList">
                 {/* <!-- Questions will be populated here --> */}
             </div>
 
             <div style={{marginTop: '1.5rem'}}>
-                <button class="btn btn-secondary" onClick={addCustomQuestion}>➕ Add Custom Question</button>
+                <button className="btn btn-secondary" onClick={addCustomQuestion}>➕ Add Custom Question</button>
             </div>
 
-            <div class="action-buttons">
-                <button class="btn btn-secondary" onClick={backToForm}>← Back to Edit</button>
-                <button class="btn btn-primary" onClick={proceedToPreview}>Next: Preview & Publish</button>
+            <div className="action-buttons">
+                <button className="btn btn-secondary" onClick={backToForm}>← Back to Edit</button>
+                <button className="btn btn-primary" onClick={proceedToPreview}>Next: Preview & Publish</button>
             </div>
         </div>
     )

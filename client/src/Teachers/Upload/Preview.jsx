@@ -26,7 +26,7 @@ export default function Preview({showNotification,updateStep,aiEnabled,currentCo
 
         const btn = event.currentTarget;
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="spinner"></span> Publishing...';
+        btn.innerHTML = '<span className="spinner"></span> Publishing...';
         btn.disabled = true;
 
         setTimeout(() => {
@@ -57,19 +57,19 @@ export default function Preview({showNotification,updateStep,aiEnabled,currentCo
     return(
     
         // <!-- Step 4: Preview Section -->
-        <div class="preview-section" id="previewSection">
-            <div class="preview-header">
+        <div className="preview-section" id="previewSection">
+            <div className="preview-header">
                 <div>
-                    <h2 class="section-title">📋 Preview Your Content</h2>
+                    <h2 className="section-title">📋 Preview Your Content</h2>
                     <p style={{color: '#5f6368', fontSize: '0.9rem'}}>Review everything before publishing to students</p>
                 </div>
             </div>
 
-            <div class="preview-meta" id="previewMeta">
+            <div className="preview-meta" id="previewMeta">
                 {/* <!-- Meta information will be populated here --> */}
             </div>
 
-            <div class="preview-content" id="previewContent">
+            <div className="preview-content" id="previewContent">
                 {/* <!-- Content preview will be populated here --> */}
             </div>
 
@@ -78,10 +78,10 @@ export default function Preview({showNotification,updateStep,aiEnabled,currentCo
                 <div id="previewQuestionsList"></div>
             </div>
 
-            <div class="action-buttons">
-                <button class="btn btn-secondary" onClick={backToAI}>← Back to Edit</button>
-                <button class="btn btn-secondary" onClick={saveDraft}>💾 Save as Draft</button>
-                <button class="btn btn-success" onClick={(e)=>publishContent(e)}>🚀 Publish Now</button>
+            <div className="action-buttons">
+                <button className="btn btn-secondary" onClick={backToAI}>← Back to Edit</button>
+                <button className="btn btn-secondary" onClick={saveDraft}>💾 Save as Draft</button>
+                <button className="btn btn-success" onClick={(e)=>publishContent(e)}>🚀 Publish Now</button>
             </div>
         </div>
     )

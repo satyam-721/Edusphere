@@ -1,6 +1,8 @@
+
+import "./Style.module.css"
 import Welcome from "./Welcome"
-import "./Style.css"
 import Status from "./Status"
+import FilterSection from "./FilterSection"
 import MainGrid from "./MainGrid"
 
 export default function App(){
@@ -8,6 +10,7 @@ export default function App(){
         <main className="content">
             <Welcome/>
             <Status/>
+            <FilterSection/>
             <MainGrid/>
         </main>
     )

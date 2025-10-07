@@ -1,5 +1,5 @@
-import App from "./Doubt/App"
-import Layout from "./Layouts/Layout";
+import App from "./App"
+import Layout from "../Layouts/Layout";
 
 
 function Doubt() {

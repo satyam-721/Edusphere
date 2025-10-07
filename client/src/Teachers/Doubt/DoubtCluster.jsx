@@ -40,13 +40,13 @@ export function DoubtCluster({ clusterId, title, count, grade, doubtClusters }) 
         
         const doubts = doubtClusters[clusterId] || [];
         const doubtsHTML = `
-            <div class="individual-doubts fade-in">
-                <div class="individual-title">Individual Student Doubts (${doubts.length})</div>
+            <div className="individual-doubts fade-in">
+                <div className="individual-title">Individual Student Doubts (${doubts.length})</div>
                 ${doubts.map(doubt => `
-                    <div class="individual-doubt">
-                        <div class="doubt-student">${doubt.student}</div>
-                        <div class="doubt-text">${doubt.doubt}</div>
-                        <div class="doubt-time">${doubt.time}</div>
+                    <div className="individual-doubt">
+                        <div className="doubt-student">${doubt.student}</div>
+                        <div className="doubt-text">${doubt.doubt}</div>
+                        <div className="doubt-time">${doubt.time}</div>
                     </div>
                 `).join('')}
             </div>

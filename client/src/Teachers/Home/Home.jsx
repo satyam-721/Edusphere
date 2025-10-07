@@ -1,4 +1,4 @@
-import "./Home.css"
+import "./Home.module.css"
 import Intro from "./Intro"
 import Header from "./Header"
 import QuickAccess from "./QuickAccess"

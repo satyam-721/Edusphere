@@ -268,37 +268,37 @@ export default function Types(){
 
             let optionsHTML = '';
             if (q.type === 'mcq') {
-                optionsHTML = '<div class="question-options">' +
+                optionsHTML = '<div className="question-options">' +
                     q.options.map((opt, idx) => 
-                        `<div class="option ${idx === q.correct ? 'correct' : ''}">${String.fromCharCode(65 + idx)}. ${opt}</div>`
+                        `<div className="option ${idx === q.correct ? 'correct' : ''}">${String.fromCharCode(65 + idx)}. ${opt}</div>`
                     ).join('') +
                     '</div>';
             } else if (q.type === 'truefalse') {
-                optionsHTML = `<div class="question-options">
-                    <div class="option ${q.answer ? 'correct' : ''}">True</div>
-                    <div class="option ${!q.answer ? 'correct' : ''}">False</div>
+                optionsHTML = `<div className="question-options">
+                    <div className="option ${q.answer ? 'correct' : ''}">True</div>
+                    <div className="option ${!q.answer ? 'correct' : ''}">False</div>
                 </div>`;
             } else if (q.type === 'short') {
                 optionsHTML = '<div style="color: #5f6368; font-size: 0.9rem; font-style: italic;">Open-ended question - Students will type their answer</div>';
             }
 
             card.innerHTML = `
-                <div class="question-header">
-                    <span class="question-number">Question ${index + 1}</span>
-                    <div class="question-actions">
-                        <button class="action-icon-btn ${approvedQuestions.has(q.id) ? 'approved' : ''}" 
+                <div className="question-header">
+                    <span className="question-number">Question ${index + 1}</span>
+                    <div className="question-actions">
+                        <button className="action-icon-btn ${approvedQuestions.has(q.id) ? 'approved' : ''}" 
                                 onclick="toggleApprove(${q.id})" title="Approve">
                             ✓
                         </button>
-                        <button class="action-icon-btn" onclick="editQuestion(${q.id})" title="Edit">
+                        <button className="action-icon-btn" onclick="editQuestion(${q.id})" title="Edit">
                             ✏️
                         </button>
-                        <button class="action-icon-btn" onclick="deleteQuestion(${q.id})" title="Remove">
+                        <button className="action-icon-btn" onclick="deleteQuestion(${q.id})" title="Remove">
                             ✗
                         </button>
                     </div>
                 </div>
-                <div class="question-text">${q.question}</div>
+                <div className="question-text">${q.question}</div>
                 ${optionsHTML}
             `;
 
@@ -382,22 +382,22 @@ export default function Types(){
             const topic = document.getElementById('notesTopic').value;
 
             metaHTML = `
-                <div class="meta-item">
-                    <div class="meta-label">Title</div>
-                    <div class="meta-value">${title}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Title</div>
+                    <div className="meta-value">${title}</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Subject</div>
-                    <div class="meta-value">${capitalizeFirst(subject)}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Subject</div>
+                    <div className="meta-value">${capitalizeFirst(subject)}</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Class</div>
-                    <div class="meta-value">${classGrade.replace('grade', 'Grade ')}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Class</div>
+                    <div className="meta-value">${classGrade.replace('grade', 'Grade ')}</div>
                 </div>
-                ${topic ? `<div class="meta-item"><div class="meta-label">Topic</div><div class="meta-value">${topic}</div></div>` : ''}
-                <div class="meta-item">
-                    <div class="meta-label">Tags</div>
-                    <div class="meta-value">${contentTags.notes.join(', ') || 'None'}</div>
+                ${topic ? `<div className="meta-item"><div className="meta-label">Topic</div><div className="meta-value">${topic}</div></div>` : ''}
+                <div className="meta-item">
+                    <div className="meta-label">Tags</div>
+                    <div className="meta-value">${contentTags.notes.join(', ') || 'None'}</div>
                 </div>
             `;
 
@@ -431,27 +431,27 @@ export default function Types(){
             });
 
             metaHTML = `
-                <div class="meta-item">
-                    <div class="meta-label">Title</div>
-                    <div class="meta-value">${title}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Title</div>
+                    <div className="meta-value">${title}</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Type</div>
-                    <div class="meta-value">📝 Assignment</div>
+                <div className="meta-item">
+                    <div className="meta-label">Type</div>
+                    <div className="meta-value">📝 Assignment</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Subject</div>
-                    <div class="meta-value">${capitalizeFirst(subject)}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Subject</div>
+                    <div className="meta-value">${capitalizeFirst(subject)}</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Class</div>
-                    <div class="meta-value">${classGrade.replace('grade', 'Grade ')}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Class</div>
+                    <div className="meta-value">${classGrade.replace('grade', 'Grade ')}</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Due Date</div>
-                    <div class="meta-value">${formattedDeadline}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Due Date</div>
+                    <div className="meta-value">${formattedDeadline}</div>
                 </div>
-                ${points ? `<div class="meta-item"><div class="meta-label">Points</div><div class="meta-value">${points}</div></div>` : ''}
+                ${points ? `<div className="meta-item"><div className="meta-label">Points</div><div className="meta-value">${points}</div></div>` : ''}
             `;
 
             contentHTML = `
@@ -473,25 +473,25 @@ export default function Types(){
             const videoId = extractYouTubeID(link);
 
             metaHTML = `
-                <div class="meta-item">
-                    <div class="meta-label">Title</div>
-                    <div class="meta-value">${title}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Title</div>
+                    <div className="meta-value">${title}</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Type</div>
-                    <div class="meta-value">🎥 Video</div>
+                <div className="meta-item">
+                    <div className="meta-label">Type</div>
+                    <div className="meta-value">🎥 Video</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Subject</div>
-                    <div class="meta-value">${capitalizeFirst(subject)}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Subject</div>
+                    <div className="meta-value">${capitalizeFirst(subject)}</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Class</div>
-                    <div class="meta-value">${classGrade.replace('grade', 'Grade ')}</div>
+                <div className="meta-item">
+                    <div className="meta-label">Class</div>
+                    <div className="meta-value">${classGrade.replace('grade', 'Grade ')}</div>
                 </div>
-                <div class="meta-item">
-                    <div class="meta-label">Source</div>
-                    <div class="meta-value">YouTube</div>
+                <div className="meta-item">
+                    <div className="meta-label">Source</div>
+                    <div className="meta-value">YouTube</div>
                 </div>
             `;
 
@@ -578,23 +578,23 @@ export default function Types(){
 
     return(
         <>
-        <div class="content-type-section" id="contentTypeSection">
-            <h2 class="section-title">Step 1: Select Content Type</h2>
-            <div class="content-type-grid">
-                <div class="content-type-card" onClick={()=>selectContentType('notes')}>
-                    <div class="content-icon">📘</div>
-                    <div class="content-type-title">Notes</div>
-                    <div class="content-type-desc">Upload study materials, PDFs, or create rich text notes</div>
+        <div className="content-type-section" id="contentTypeSection">
+            <h2 className="section-title">Step 1: Select Content Type</h2>
+            <div className="content-type-grid">
+                <div className="content-type-card" onClick={()=>selectContentType('notes')}>
+                    <div className="content-icon">📘</div>
+                    <div className="content-type-title">Notes</div>
+                    <div className="content-type-desc">Upload study materials, PDFs, or create rich text notes</div>
                 </div>
-                <div class="content-type-card" onClick={()=>selectContentType('assignment')}>
-                    <div class="content-icon">📝</div>
-                    <div class="content-type-title">Assignment</div>
-                    <div class="content-type-desc">Create assignments with deadlines and instructions</div>
+                <div className="content-type-card" onClick={()=>selectContentType('assignment')}>
+                    <div className="content-icon">📝</div>
+                    <div className="content-type-title">Assignment</div>
+                    <div className="content-type-desc">Create assignments with deadlines and instructions</div>
                 </div>
-                <div class="content-type-card" onClick={()=>selectContentType('video')}>
-                    <div class="content-icon">🎥</div>
-                    <div class="content-type-title">Video</div>
-                    <div class="content-type-desc">Share YouTube videos or educational content</div>
+                <div className="content-type-card" onClick={()=>selectContentType('video')}>
+                    <div className="content-icon">🎥</div>
+                    <div className="content-type-title">Video</div>
+                    <div className="content-type-desc">Share YouTube videos or educational content</div>
                 </div>
             </div>
         </div>
@@ -635,7 +635,7 @@ export default function Types(){
         />
 
         {/* <!-- Notification --> */}
-        <div class="notification" id="notification"></div>
+        <div className="notification" id="notification"></div>
         
         </>
     )

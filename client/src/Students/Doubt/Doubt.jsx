@@ -1,14 +1,14 @@
 import Header from "./Header";
 import Layout from "../Layouts/Layout";
-import './Style.css';
+import './SStyle.module.css';
 import Status from "./Status";
 import MainGrid from "./Maingrid";
 export default function Doubt() {
     return(
         <>
         <Layout/>
-        <div class="main-container">
-            <main class="content">
+        <div className="main-container">
+            <main className="content">
                 <Header/>
                 <Status/>
                 <MainGrid/>

@@ -28,11 +28,11 @@ export default function MainGrid(){
 
 
     return(
-        <div class="main-grid">
+        <div className="main-grid">
             <AskDoubt onSubmit={handleDoubtSubmit}/>
-            <div class="my-doubts-section">
+            <div className="my-doubts-section">
                 <SectionHeader/>
-                <div class="doubts-list" id="doubtsList">
+                <div className="doubts-list" id="doubtsList">
                     <Answered/>
                     <Pending currDoubt={currDoubt[0]}/>
                     <Resolved/>

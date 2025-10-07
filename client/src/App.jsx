@@ -1,5 +1,5 @@
 // import Home from "./Home/Home.jsx"
-import Upload from "./Upload/Upload"
+import Upload from "./Teachers/Upload/Upload"
 function App() {
 
   return (

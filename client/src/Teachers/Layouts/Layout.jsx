@@ -1,6 +1,6 @@
 import TopNav from "./TopNav";
 import SideNav from "./SideNav";
-import "./Layout.css"
+import "./Layout.module.css"
 
 export default function Layout(){
     return(
