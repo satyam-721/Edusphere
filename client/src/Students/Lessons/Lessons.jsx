@@ -1,4 +1,4 @@
-import "./SStyles.module.css"
+import "./Styles.css"
 import Layout from "../Layouts/Layout"
 import Header from "./Header"
 import Content from "./Content"

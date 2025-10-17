@@ -1,10 +1,12 @@
+import React from "react";
+import { Link } from "react-router-dom";
 
 export default function TopNav(){
     return(
     <header className="header">
         <nav className="nav">
             <div className="nav-left">
-                <a href="#" className="logo">EduSphere</a>
+                <Link style={{ textDecoration:'none',color:'inherit' }} to="/teacher" className="logo">EduSphere</Link>
                 <div className="breadcrumb">Teacher Dashboard</div>
             </div>
             <div className="nav-right">

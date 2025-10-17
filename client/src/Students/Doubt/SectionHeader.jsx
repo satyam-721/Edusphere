@@ -5,13 +5,13 @@ export default function SectionHeader(){
     return(
 
 
-        <div className="section-header">
-            <h2 className="section-title">📝 My Doubts</h2>
-            <div className="filter-tabs">
-                <button className="filter-tab active" onClick={()=>filterDoubts('all')}>All</button>
-                <button className="filter-tab" onClick={()=>filterDoubts('pending')}>Pending</button>
-                <button className="filter-tab" onClick={()=>filterDoubts('answered')}>Answered</button>
-                <button className="filter-tab" onClick={()=>filterDoubts('resolved')}>Resolved</button>
+        <div class="section-header">
+            <h2 class="section-title">📝 My Doubts</h2>
+            <div class="filter-tabs">
+                <button class="filter-tab active" onClick={()=>filterDoubts('all')}>All</button>
+                <button class="filter-tab" onClick={()=>filterDoubts('pending')}>Pending</button>
+                <button class="filter-tab" onClick={()=>filterDoubts('answered')}>Answered</button>
+                <button class="filter-tab" onClick={()=>filterDoubts('resolved')}>Resolved</button>
             </div>
         </div>
     )

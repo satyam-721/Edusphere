@@ -6,7 +6,7 @@ import SubjectSection from "./SubjectSection"
 import ProgressCard from "./ProgressCard"
 
 
-import './SStyle.module.css'
+import './Style.css'
 export default function LessonsDashboard() {
     function showNotification(type, message) {
         const notification = document.getElementById('notification');
