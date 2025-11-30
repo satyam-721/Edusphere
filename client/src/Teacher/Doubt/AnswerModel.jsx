@@ -23,11 +23,11 @@ export default function AnswerModel(props){
             <div class="answer-section">
                 <div class="answer-title">
                     Your Response
-                    <span className="ai-badge" style={{ fontSize: '0.7rem' }}>AI-Assisted</span>
+                    {/* <span className="ai-badge" style={{ fontSize: '0.7rem' }}>AI-Assisted</span> */}
                 </div>
                 <textarea 
                     class="answer-textarea" 
-                    placeholder="Type your answer here... (AI suggestions will appear as you type)"
+                    placeholder="Type your answer here..."
                     id="answerText"
                 ></textarea>
                 

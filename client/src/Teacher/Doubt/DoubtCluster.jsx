@@ -67,7 +67,7 @@ export function DoubtCluster({ clusterId, title, count, grade, doubtClusters }) 
                 <div className="cluster-content">
                     <div className="cluster-title">{title}</div>
                     <div className="cluster-summary">
-                        AI generated description of the cluster to give more context about the doubts contained within.
+                        {doubtClusters[clusterId] ? doubtClusters[clusterId][0].doubt : "No doubts available"}
                     </div>
                     <div className="cluster-meta">
                         <div className="meta-item">
