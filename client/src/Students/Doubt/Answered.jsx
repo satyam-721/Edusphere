@@ -1,4 +1,19 @@
 export default function Answered({doubtData}) {
+    async function markResolved(button) {
+        console.log(doubtData.doubt);
+        const response = await fetch("http://localhost:5000/doubttype", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: doubtData.doubt,
+            })
+        });
+        console.log(response);
+            
+    }
+
     return (
         <div class="doubt-card fade-in" data-status="answered">
             <div class="doubt-header">
@@ -21,8 +36,8 @@ export default function Answered({doubtData}) {
                 </div>
             </div>
             <div class="doubt-actions">
-                <button class="action-btn primary" onclick="markResolved(this)">Mark as Resolved</button>
-                <button class="action-btn" onclick="askFollowUp(this)">Ask Follow-up</button>
+                <button class="action-btn primary" onClick={()=>markResolved(this)}>Mark as Resolved</button>
+                {/* <button class="action-btn" onclick="askFollowUp(this)">Ask Follow-up</button> */}
             </div>
         </div>
     )

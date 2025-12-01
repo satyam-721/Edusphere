@@ -13,8 +13,8 @@ export default function Pending({doubtData}){
                 {doubtData.doubt}
             </div>
             <div class="doubt-actions">
-                <button class="action-btn" onclick="editDoubt(this)">Edit</button>
-                <button class="action-btn" onclick="deleteDoubt(this)">Delete</button>
+                {/* <button class="action-btn" onclick="editDoubt(this)">Edit</button> */}
+                {/* <button class="action-btn" onclick="deleteDoubt(this)">Delete</button> */}
             </div>
         </div>
     )

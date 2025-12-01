@@ -9,7 +9,7 @@ export function DoubtCluster({ clusterId, title, count, grade, doubtClusters }) 
             <h4 style="margin: 0 0 1rem 0; color: #202124;">Students who asked (${doubts.length}):</h4>
             ${doubts.slice(0, 3).map(doubt => `
                 <div style="background: #fff; padding: 0.75rem; margin-bottom: 0.5rem; border-radius: 8px; font-size: 0.8rem;">
-                    <strong>${doubt.student}:</strong> ${doubt.doubt.substring(0, 100)}...
+                    <strong>${doubt.student}:</strong> ${doubt.doubt.substring(0, 100)}
                 </div>
             `).join('')}
             ${doubts.length > 3 ? `<div style="color: #5f6368; font-size: 0.8rem; text-align: center;">...and ${doubts.length - 3} more students</div>` : ''}
