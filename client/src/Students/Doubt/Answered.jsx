@@ -11,6 +11,7 @@ export default function Answered({doubtData}) {
             })
         });
         console.log(response);
+        window.location.reload();
             
     }
 

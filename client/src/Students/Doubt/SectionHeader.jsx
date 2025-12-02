@@ -1,6 +1,24 @@
 export default function SectionHeader(){
-    function filterDoubts(status){
-    }
+    function filterDoubts(status) {
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filter cards
+            const cards = document.querySelectorAll('.doubt-card');
+            cards.forEach(card => {
+                if (status === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = card.dataset.status === status ? 'block' : 'none';
+                }
+            });
+
+            showNotification('info', `Showing ${status === 'all' ? 'all' : status} doubts`);
+        }
+
 
     return(
 

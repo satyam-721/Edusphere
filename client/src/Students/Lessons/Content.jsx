@@ -1,61 +1,70 @@
-export default function Content() {
+import { useEffect, useState } from "react";
 
+export default function Content() {
+    const [fetchedNotes, setFetchedNotes] = useState(null);
+
+    // fetch from backend
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await fetch("http://localhost:5000/assignmentnotesfetch", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`Fetch failed: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log("Fetched notes:", data[4]);
+                setFetchedNotes(data[4]); // store DB result
+            } catch (err) {
+                console.error("Error fetching doubt types:", err);
+            }
+        })();
+    }, []);
 
     function switchContent(type) {
-            document.getElementById('notesContent').style.display = 'none';
-            document.getElementById('videoContent').style.display = 'none';
-            document.getElementById('assignmentContent').style.display = 'none';
+        const notesEl = document.getElementById('notesContent');
+        const videoEl = document.getElementById('videoContent');
+        const assignmentEl = document.getElementById('assignmentContent');
 
-            if (type === 'notes') {
-                document.getElementById('notesContent').style.display = 'block';
-            } else if (type === 'video') {
-                document.getElementById('videoContent').style.display = 'block';
-            } else if (type === 'assignment') {
-                document.getElementById('assignmentContent').style.display = 'block';
-            }
+        if (notesEl) notesEl.style.display = 'none';
+        if (videoEl) videoEl.style.display = 'none';
+        if (assignmentEl) assignmentEl.style.display = 'none';
+
+        if (type === 'notes' && notesEl) {
+            notesEl.style.display = 'block';
+        } else if (type === 'video' && videoEl) {
+            videoEl.style.display = 'block';
+        } else if (type === 'assignment' && assignmentEl) {
+            assignmentEl.style.display = 'block';
         }
+    }
 
     return(
         <div className="content-section" id="contentSection">
             <h2 className="section-title">📖 Lesson Content</h2>
             
-            {/* <!-- Notes Content (Default) --> */}
+            {/* Notes Content (Default) */}
             <div className="content-viewer" id="notesContent">
                 <div style={{ padding: "2rem" }}>
-                    <h3 style={{ marginBottom: "1rem", color: "#1a73e8" }}>Introduction to Linear Equations</h3>
-                    <p style={{ marginBottom: "1rem", lineHeight: 1.8 }}>
-                        A linear equation is an algebraic equation in which each term is either a constant or the product of a constant and a single variable. 
-                        Linear equations can have one or more variables.
-                    </p>
-                    <h4 style={{ margin: "1.5rem 0 0.75rem 0", color: "#202124" }}>Standard Form</h4>
-                    <p style={{ marginBottom: "1rem", lineHeight: 1.8 }}>
-                        The standard form of a linear equation in one variable is: <strong>ax + b = 0</strong>, where a and b are constants and x is the variable.
-                    </p>
-                    <h4 style={{ margin: "1.5rem 0 0.75rem 0", color: "#202124" }}>Key Concepts</h4>
-                    <ul style={{ marginLeft: "1.5rem", lineHeight: 2 }}>
-                        <li>A linear equation has at most one solution</li>
-                        <li>The graph of a linear equation is always a straight line</li>
-                        <li>Linear equations can be solved by isolating the variable</li>
-                        <li>The solution represents where the line crosses the x-axis</li>
-                    </ul>
-                    <h4 style={{ margin: "1.5rem 0 0.75rem 0", color: "#202124" }}>Example Problems</h4>
-                    <div style={{ background: "#fff", padding: "1rem", borderRadius: "8px", border: "1px solid #e0e0e0", marginBottom: "1rem" }}>
-                        <strong>Example 1:</strong> Solve for x: 2x + 6 = 14<br />
-                        <em style={{ color: "#5f6368" }}>Solution: x = 4</em>
-                    </div>
-                    <div style={{ background: "#fff", padding: "1rem", borderRadius: "8px", border: "1px solid #e0e0e0" }}>
-                        <strong>Example 2:</strong> Solve for x: 5x - 3 = 2x + 9<br />
-                        <em style={{ color: "#5f6368" }}>Solution: x = 4</em>
-                    </div>
+                    {fetchedNotes ? (
+                        // Render editorContent (HTML string) from the fetched response
+                        <div dangerouslySetInnerHTML={{ __html: fetchedNotes.editorContent }} />
+                    ) : (
+                        <p style={{ color: "#5f6368" }}>Loading notes...</p>
+                    )}
                 </div>
             </div>
 
-            {/* <!-- Video Content (Hidden by default) --> */}
+            {/* Video Content (Hidden by default) */}
             <div className="video-player" id="videoContent" style={{ display: "none" }}>
                 <iframe src="https://www.youtube.com/embed/WUvTyaaNkzM" allowFullScreen></iframe>
             </div>
 
-            {/* <!-- Assignment Content (Hidden by default) --> */}
+            {/* Assignment Content (Hidden by default) */}
             <div className="assignment-details" id="assignmentContent" style={{ display: "none" }}>
                 <h4 style={{ marginBottom: "1rem" }}>Assignment Instructions</h4>
                 <p style={{ marginBottom: "1.5rem", lineHeight: 1.6 }}>
@@ -80,7 +89,7 @@ export default function Content() {
                 </button>
             </div>
 
-            {/* <!-- Toggle Buttons --> */}
+            {/* Toggle Buttons */}
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #e0e0e0" }}>
                 <button className="quiz-nav-btn secondary" onClick={() => switchContent('notes')}>📖 Notes</button>
                 <button className="quiz-nav-btn secondary" onClick={() => switchContent('video')}>🎥 Video</button>

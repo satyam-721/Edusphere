@@ -284,6 +284,58 @@ app.post("/doubttype", (req, res) => {
 });
 
 
+app.post("/assignmentnotes", (req, res) => {
+  const { title, editorContent, subject, classGrade, topic, tags } = req.body;
+
+  console.log("Received assignment notes:");
+  console.log("Title:", title);
+  console.log("Content:", editorContent);
+  console.log("Subject:", subject);
+  console.log("Class Grade:", classGrade);
+  console.log("Topic:", topic);
+  console.log("Tags:", tags);
+  // Here, you can add code to store the notes in a database
+  try{
+    let query = 'INSERT INTO assignment (title, editorContent, subject, classGrade, topic) VALUES (?, ?, ?, ?, ?)';
+    let values = [title, editorContent, subject, classGrade, topic]
+    connection.query(query,values,(error,result)=>{   
+        if(error) throw(error);
+        console.log(result);     
+    });
+  }
+  catch(e){
+    console.log(e);
+  }
+
+  res.json({ status: "success", message: "Notes received." });
+});
+
+//go to CONTENT.JSX
+app.post("/assignmentnotesfetch",(req,res)=>{
+    let query = 'SELECT editorContent, title, subject, classGrade, topic FROM assignment';
+    try{
+      connection.query(query,(error,result)=>{
+          if(error) throw(error);
+          console.log(result);     //returns an array
+          
+          res.json(result);
+      });
+    } catch(e){
+      console.log(e);
+    }
+
+})
+
+
+
+
+
+
+
+
+
+
+
 
 
 

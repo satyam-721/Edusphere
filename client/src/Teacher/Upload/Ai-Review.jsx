@@ -9,7 +9,7 @@ export default function AiReview({showNotification,generatedQuestions,approvedQu
             approvedQuestions.clear();
             displayAIQuestions();
             showNotification('success', 'Questions regenerated!');
-        }, 2000);
+        }, 1000);
     }
 
     function addCustomQuestion() {
