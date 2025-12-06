@@ -3,9 +3,13 @@ import Layout from "../Layouts/Layout"
 import Header from "./Header"
 import Content from "./Content"
 import QuizCointainer from "./Quiz-Cointainer"
-import DoubtPanel from "./DoubtPanel"
+import DoubtPanel from "./DoubtPanel";
+import { useParams } from "react-router-dom";
+
 
 export default function Lessons() {
+
+    const {id}=useParams(); //lesson id
 
     let currentQuestion = 1;      //connect this all with db 
     const totalQuestions = 3;     //need to update this as per total Questions
@@ -41,8 +45,8 @@ export default function Lessons() {
         <Layout/>
         <div className="main-layout">
             <div className="main-content">
-                <Header/>
-                <Content/>
+                <Header id={id}/>
+                <Content id={id}/>
                 
                     <QuizCointainer 
                         showNotification={showNotification} 

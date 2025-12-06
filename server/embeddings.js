@@ -58,7 +58,6 @@ function similarityMatrix(embeddings) {
   return mat;
 }
 
-/* ---------- union-find ---------- */
 function makeUnionFind(n) {
   const parent = new Array(n).fill(0).map((_, i) => i);
   function find(a) { return parent[a] === a ? a : (parent[a] = find(parent[a])); }
@@ -69,7 +68,6 @@ function makeUnionFind(n) {
   return { parent, find, union };
 }
 
-/* ---------- cluster by threshold transitive (unchanged) ---------- */
 function clusterByThresholdTransitive(texts, simMat, threshold = 0.7) {
   const n = texts.length;
   const uf = makeUnionFind(n);

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
-export default function Content() {
+export default function Content( {id}) {
     const [fetchedNotes, setFetchedNotes] = useState(null);
+    console.log("LESSON ID: "+id);
 
     // fetch from backend
     useEffect(() => {
@@ -17,8 +18,8 @@ export default function Content() {
                     throw new Error(`Fetch failed: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log("Fetched notes:", data[4]);
-                setFetchedNotes(data[4]); // store DB result
+                console.log("Fetched notes:", data[id]);
+                setFetchedNotes(data[id]); // store DB result
             } catch (err) {
                 console.error("Error fetching doubt types:", err);
             }

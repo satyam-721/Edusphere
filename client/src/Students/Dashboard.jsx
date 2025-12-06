@@ -12,7 +12,7 @@ export default function Dashboard() {
         }}>
             <h2 style={{ color: "#2d3a4b", marginBottom: "16px" }}>Student Dashboard</h2>
             <p style={{ color: "#4b5563", marginBottom: "24px" }}>
-                Welcome back! Here you can view your courses, assignments, and progress.
+                Change hora?
             </p>
             <div style={{
                 display: "flex",

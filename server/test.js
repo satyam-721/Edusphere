@@ -310,9 +310,9 @@ app.post("/assignmentnotes", (req, res) => {
   res.json({ status: "success", message: "Notes received." });
 });
 
-//go to CONTENT.JSX
+//go to CONTENT.JSX and choice.jsx
 app.post("/assignmentnotesfetch",(req,res)=>{
-    let query = 'SELECT editorContent, title, subject, classGrade, topic FROM assignment';
+    let query = 'SELECT id, editorContent, title, subject, classGrade, topic, status FROM assignment';
     try{
       connection.query(query,(error,result)=>{
           if(error) throw(error);

@@ -42,6 +42,11 @@ export default function Types(){
             id: 4,
             question: "Explain Newton's First Law of Motion in your own words.",
             type: "short"
+        },
+        {
+            id:5,
+            question: "Explain Newton's First Law of Motion in your own words.",
+            type: "short"
         }
     ];
 

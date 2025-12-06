@@ -12,7 +12,7 @@ export default function StudentMain() {
     return(
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      <Route path="lesson" element={<Lessons />} />
+      <Route path="lesson/:id" element={<Lessons />} />
       <Route path="doubt" element={<Doubt />} />
       <Route path="lessonsdashboard" element={<LessonsDashboard />} />
       <Route path="Choice" element={<Choice />} />
