@@ -14,6 +14,62 @@
     padding-bottom: 2rem;
 }
 
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+}
+
+.modal {
+    background: white;
+    width: 420px;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.modal-label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.modal-btn.cancel {
+    background: #eee;
+}
+
+.modal-btn.save {
+    background: #1a73e8;
+    color: white;
+}
+
+
 /* Dashboard Header */
 .dashboard-header {
     background: linear-gradient(135deg, #1a73e8, #4285f4);

@@ -1,4 +1,4 @@
-export default function Preview({showNotification,updateStep,aiEnabled,currentContentType,resetForm}) {
+export default function Preview({showNotification,updateStep,aiEnabled,currentContentType,resetForm,sampleQuestions}) {
     function backToAI() {
         document.getElementById('previewSection').classList.remove('active');
         if (aiEnabled) {
@@ -20,8 +20,18 @@ export default function Preview({showNotification,updateStep,aiEnabled,currentCo
 
     // Publish content
     function publishContent(event) {
+        
+
+
         if (!confirm('Publish this content to students now?')) {
             return;
+        }
+        if (sampleQuestions && sampleQuestions.length > 0) {
+            fetch('http://localhost:5000/saveQuestions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({sampleQuestions})
+            }).catch(err => console.error('Error saving questions:', err));
         }
 
         const btn = event.currentTarget;

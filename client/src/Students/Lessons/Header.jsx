@@ -2,7 +2,8 @@ import { useParams } from "react-router-dom";
 import { useEffect,useState } from "react";
 
 export default function Header(){
-    const {id}=useParams(); //lesson id
+    let {id}=useParams(); //lesson id
+    id=id-1;
     const [title, settitle] = useState(null);
     const [subject, setsubject] = useState(null);
 

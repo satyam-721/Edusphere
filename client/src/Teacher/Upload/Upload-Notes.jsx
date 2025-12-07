@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 export default function UploadNotes({
   proceedToAI,
   cancelUpload,
@@ -6,12 +7,40 @@ export default function UploadNotes({
   toggleUploadMethod,
   handleFileUpload,
   removeFile,
-  formatText
+  formatText,
+  setSampleQuestions
 }) {
 
   // Collect the fields and print them (excluding file content)
   // Replace your handlePreview with this version
 const handlePreview = async (ev) => {
+      
+          // console.log("Fetching sample AI questions...");
+  
+          // (async () => {
+          //     try {
+          //         const response = await fetch("http://localhost:5000/fetchaiquestions", {
+          //             method: "POST",
+          //             headers: {
+          //                 "Content-Type": "application/json"
+          //             }
+          //         });
+          //         if (!response.ok) {
+          //             throw new Error(`Fetch failed: ${response.status}`);
+          //         }
+          //         const data = await response.json();
+          //         console.log("Fetched QUESTIONS:", data);
+          //         setSampleQuestions(data); 
+                  
+          //     } catch (err) {
+          //         console.error("Error fetching doubt types:", err);
+          //     }
+          // })();
+      
+      // setSampleQuestion
+      
+
+
   // read inputs (same as before)
   const titleEl = document.getElementById('notesTitle');
   const editorEl = document.getElementById('editorContent');
@@ -50,6 +79,7 @@ const handlePreview = async (ev) => {
     tags: cleanTags
   };
 
+
   try {
     const res = await fetch('http://localhost:5000/assignmentnotes', {
       method: 'POST',
@@ -75,7 +105,31 @@ const handlePreview = async (ev) => {
 
   // continue existing flow regardless (or move this inside success branch if you prefer)
   if (typeof proceedToAI === 'function') proceedToAI(ev);
+
+  try {
+    console.log('Content to Fetch:', payload.editorContent);
+    const aiRes = await fetch('http://localhost:5000/fetchaiquestions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!aiRes.ok) {
+      const text = await aiRes.text().catch(() => '');
+      console.error('Failed to fetch AI questions:', aiRes.status, text);
+    } else {
+      const aiData = await aiRes.json().catch(() => null);
+      console.log('Fetched AI questions:', aiData);
+      if (typeof setSampleQuestions === 'function') setSampleQuestions(aiData);
+    }
+  } catch (err) {
+    console.error('Network/CORS error while fetching AI questions:', err);
+  }
+
+  
 };
+
+  
 
 
   return(

@@ -35,7 +35,7 @@ export default function LessonsDashboard() {
                 <SubjectSection
                     showNotification={showNotification}
                     />
-                <ProgressCard/>
+                {/* <ProgressCard/> */}
             </div>
 
         </div>

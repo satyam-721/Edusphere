@@ -326,6 +326,146 @@ app.post("/assignmentnotesfetch",(req,res)=>{
 
 })
 
+app.post("/fetchaiquestions",(req,res)=>{
+  let query='select editorContent from assignment where id=(select max(id) from assignment)';
+  try{
+    connection.query(query,(error,result)=>{
+        if(error) throw(error);
+        let content = result[0].editorContent;
+        content=`You are a question-generation system. The content below is in HTML format. 
+IGNORE all HTML tags completely and extract ONLY the meaningful text content.
+
+Based on that extracted text, generate questions in these categories:
+1. Multiple Choice Questions (mcq)
+2. True/False questions (truefalse)
+3. Short answer questions (short)
+
+Follow these strict rules:
+
+- Output MUST be a JSON array of objects.
+- Each object must match exactly one of the following formats:
+
+For MCQ:
+{
+    id: <number>,
+    question: "<question text>",
+    options: ["option1", "option2", "option3", "option4"],
+    correct: <index of correct option starting from 0>,
+    type: "mcq"
+}
+
+For True/False:
+{
+    id: <number>,
+    question: "<question text>",
+    answer: true OR false,
+    type: "truefalse"
+}
+
+For Short Answer:
+{
+    id: <number>,
+    question: "<question text>",
+    type: "short"
+}
+
+Additional Requirements:
+- Ignore all HTML tags completely.
+- Use ONLY the text meaning from the provided content.
+- IDs must be sequential starting from 1.
+- Do NOT include explanations.
+- Do NOT include extra fields.
+- Ensure good conceptual variety.
+- Maintain clarity and correctness.
+
+`+content;
+        
+      function extractJsonFromMarkdown(text) {
+        // remove ```json and ``` block markers
+        // const cleaned = text
+        //   .replace(/```json/i, "")
+        //   .replace(/```/g, "")
+        //   .trim();
+
+        // try {
+        //   return JSON.parse(cleaned);
+        // } catch (err) {
+        //   console.error("JSON Parse Error:", err);
+        //   return null;
+        // }
+
+        return text;
+      }
+
+      async function getQuestion(content) {
+        const rawAnswer = await askGemini(content);  // this returns markdown string
+        console.log("gemini answer (raw):", rawAnswer);
+
+        const parsed = extractJsonFromMarkdown(rawAnswer);  // convert to object
+        console.log("gemini answer (parsed):", parsed);
+
+        return parsed;
+      }
+
+        getQuestion(content).then(resultObj => {
+          //output i am getting is string not json
+          const jsonString = resultObj.text
+            .replace(/```json\n?/g, '')
+            .replace(/```/g, '')
+            .trim();
+
+          const parsedQuestions = JSON.parse(jsonString);
+          console.log("FINAL RESULT JSON:", parsedQuestions);
+          
+
+          res.json(parsedQuestions);  
+        });
+
+
+
+    });
+  }
+  catch(e){
+    console.log(e);
+
+  }
+})
+
+app.post("/saveQuestions", (req, res) => {
+  let { sampleQuestions } = req.body;
+  console.log("Received questions to save:", sampleQuestions);
+  sampleQuestions=JSON.stringify(sampleQuestions);
+
+  let query = `UPDATE assignment SET questions = ? ORDER BY id DESC LIMIT 1`;
+  let values = [sampleQuestions];
+
+  try{
+        connection.query(query,values,(error,result)=>{   
+            if(error) throw(error);
+            console.log(result);     //returns an array
+        });
+      } catch(e){
+        console.log(e);
+      }
+});
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

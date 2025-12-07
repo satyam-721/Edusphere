@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 dotenv.config();
 const ai = new GoogleGenAI({
-  apiKey: "AIzaSyBF2PShbqCtL1v0yr1LGHcOfpzehs1_Lus"   // check this key 
+  apiKey: ""   // Ashish key 
 });
 
 // async function main() {

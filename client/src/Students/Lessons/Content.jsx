@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function Content( {id}) {
+    id=id-1;
     const [fetchedNotes, setFetchedNotes] = useState(null);
     console.log("LESSON ID: "+id);
 

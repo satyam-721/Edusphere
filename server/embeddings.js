@@ -16,7 +16,7 @@ async function embedAll(texts, opts = {}) {
 
   const model = opts.model || "gemini-embedding-001";
   // preserved hard-coded key line per your request:
-  const ai = new GoogleGenAI({ apiKey: "AIzaSyAPqAhdLt4_vrQ02qQFecHvmi0MJAUK34g" });    //CHECK THIS KEY
+  const ai = new GoogleGenAI({ apiKey: "" });    //CHECK THIS KEY
 
   const payload = { model, contents: texts, taskType: "SEMANTIC_SIMILARITY" };
   const res = await ai.models.embedContent(payload);

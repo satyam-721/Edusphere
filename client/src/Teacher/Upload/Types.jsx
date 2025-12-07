@@ -3,7 +3,7 @@ import UploadAssignment from "./Upload-Assignment"
 import UploadVideo from "./Upload-Video"
 import AiReview from "./Ai-Review";
 import Preview from "./Preview";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 
 
@@ -15,40 +15,70 @@ export default function Types(){
     let generatedQuestions = [];
     let approvedQuestions = new Set();
     let contentTags = { notes: [], assignment: [], video: [] };
-    const [toggleStyle, setToggleStyle] = useState('#1a73e8'); 
+    const [toggleStyle, setToggleStyle] = useState('#1a73e8');
+    const [sampleQuestions, setSampleQuestions] = useState([]);
+
     // Sample AI-generated questions
-    const sampleQuestions = [
-        {
-            id: 1,
-            question: "According to Newton's Second Law, what is the relationship between force, mass, and acceleration?",
-            options: ["F = m + a", "F = m × a", "F = m ÷ a", "F = m - a"],
-            correct: 1,
-            type: "mcq"
-        },
-        {
-            id: 2,
-            question: "Which of the following is an example of Newton's Third Law?",
-            options: ["A car accelerating", "A rocket propelling upward", "An object at rest", "Friction slowing motion"],
-            correct: 1,
-            type: "mcq"
-        },
-        {
-            id: 3,
-            question: "An object in motion will stay in motion unless acted upon by an external force.",
-            answer: true,
-            type: "truefalse"
-        },
-        {
-            id: 4,
-            question: "Explain Newton's First Law of Motion in your own words.",
-            type: "short"
-        },
-        {
-            id:5,
-            question: "Explain Newton's First Law of Motion in your own words.",
-            type: "short"
-        }
-    ];
+    // const sampleQuestions = [
+    //     {
+    //         id: 1,
+    //         question: "According to Newton's Second Law, what is the relationship between force, mass, and acceleration?",
+    //         options: ["F = m + a", "F = m × a", "F = m ÷ a", "F = m - a"],
+    //         correct: 1,
+    //         type: "mcq"
+    //     },
+    //     {
+    //         id: 2,
+    //         question: "Which of the following is an example of Newton's Third Law?",
+    //         options: ["A car accelerating", "A rocket propelling upward", "An object at rest", "Friction slowing motion"],
+    //         correct: 1,
+    //         type: "mcq"
+    //     },
+    //     {
+    //         id: 3,
+    //         question: "An object in motion will stay in motion unless acted upon by an external force.",
+    //         answer: true,
+    //         type: "truefalse"
+    //     },
+    //     {
+    //         id: 4,
+    //         question: "Explain Newton's First Law of Motion in your own words.",
+    //         type: "short"
+    //     },
+    //     {
+    //         id:5,
+    //         question: "Explain Newton's First Law of Motion in your own words.",
+    //         type: "short"
+    //     }
+    // ];
+
+    useEffect(() => {
+        console.log("MOUNTED: ",sampleQuestions);
+    }, [sampleQuestions])
+
+    // after: const [sampleQuestions, setSampleQuestions] = useState([]);
+useEffect(() => {
+  // if child provided questions, populate generatedQuestions and render them
+  if (sampleQuestions && sampleQuestions.length > 0) {
+    // copy into your existing var so displayAIQuestions uses it
+    generatedQuestions = [...sampleQuestions];
+
+    // If you want to auto-open the AI review panel when questions arrive:
+    const panel = document.getElementById('aiReviewPanel');
+    if (panel) panel.classList.add('active');
+
+    // render the questions into DOM (your existing function)
+    displayAIQuestions();
+
+    // update preview (optional) if you want preview to pick up questions too
+    // buildPreview();
+  }
+}, [sampleQuestions]);
+
+
+    useEffect(() => {
+        console.log("UPDATED: ",sampleQuestions);
+    }, [sampleQuestions])
 
     function showNotification(type, message) {
         const notification = document.getElementById('notification');
@@ -612,6 +642,7 @@ export default function Types(){
             removeFile={removeFile}
             formatText={formatText}
             toggleStyle={toggleStyle}
+            setSampleQuestions={setSampleQuestions}
 
             />
         <UploadAssignment
@@ -629,6 +660,8 @@ export default function Types(){
             buildPreview={buildPreview}
             currentContentType={currentContentType}
             updateStep={updateStep}
+            setSampleQuestions={setSampleQuestions}
+            sampleQuestions={sampleQuestions}
 
         />
         <Preview
@@ -637,6 +670,7 @@ export default function Types(){
             aiEnabled={aiEnabled}
             currentContentType={currentContentType}
             resetForm={resetForm}
+            sampleQuestions={sampleQuestions}
         />
 
         {/* <!-- Notification --> */}
