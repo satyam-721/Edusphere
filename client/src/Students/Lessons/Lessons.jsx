@@ -11,18 +11,10 @@ export default function Lessons() {
 
     const {id}=useParams(); //lesson id
 
-    let currentQuestion = 1;      //connect this all with db 
-    const totalQuestions = 3;     //need to update this as per total Questions
-    let answers = {};
+    
     let quizStartTime;
     let quizTimer;
-    const correctAnswers = {   //need to update this 
-            1: 'B',
-            2: 'A',
-            3: 'True',
-            4: 'x = 4',
-            5: 'B'
-        };
+    
 
 
     function showNotification(type, message) {
@@ -50,10 +42,9 @@ export default function Lessons() {
                 
                     <QuizCointainer 
                         showNotification={showNotification} 
-                        currentQuestion={currentQuestion}
-                        totalQuestions={totalQuestions}
-                        answers={answers}
-                        correctAnswers={correctAnswers}
+                        id={id}
+                     
+                    
                     />
             </div>
             <DoubtPanel showNotification={showNotification}/>

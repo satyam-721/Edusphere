@@ -5,22 +5,7 @@ const ai = new GoogleGenAI({
   apiKey: ""   // Ashish key 
 });
 
-// async function main() {
-//   const response = await ai.models.generateContent({
-//     model: "gemini-2.5-flash",
-//     contents: "How do I calculate force using F=ma when the mass is given in grams? Do I need to convert it first?",
-//     config: {
-//       thinkingConfig: {
-//         thinkingBudget: 0
-//       }
-//     }
-//   });
-//   const output = response.candidates[0].content.parts[0];   //convert this into text using .text
-//   console.log(output);
 
-// }
-
-// main();
 
 
 function extractText(response) {

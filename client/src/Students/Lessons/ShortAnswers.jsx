@@ -1,14 +1,26 @@
-export default function shortAnswers(){
-    return(
-        <div className="question-card" data-question="3" style={{display: 'none'}}>
-            <div className="question-header">
-                <span className="question-number">Question 3 of 10</span>
-                <span className="question-type">Short Answer</span>
-            </div>
-            <div className="question-text">
-                Solve for x and show your work: 5x - 3 = 2x + 9
-            </div>
-            <textarea className="answer-textarea" placeholder="Type your answer here..." id="answer4"></textarea>
-        </div>
-    )
+import React from "react";
+
+export default function ShortAnswers({ question, index = 0, total = 0, isVisible = false }) {
+  return (
+    <div
+      className="question-card"
+      data-question={question.id}
+      style={{ display: isVisible ? "block" : "none" }}
+    >
+      <div className="question-header">
+        <span className="question-number">Question {index + 1} of {total}</span>
+        <span className="question-type">Short Answer</span>
+      </div>
+
+      <div className="question-text">
+        {question.question}
+      </div>
+
+      <textarea
+        className="answer-textarea short-answer-input"
+        placeholder="Type your answer here..."
+        id={`answer-${question.id}`}
+      />
+    </div>
+  );
 }

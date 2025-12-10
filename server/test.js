@@ -285,38 +285,81 @@ app.post("/doubttype", (req, res) => {
 
 
 app.post("/assignmentnotes", (req, res) => {
-  const { title, editorContent, subject, classGrade, topic, tags } = req.body;
+  const { title, editorContent, subject, classGrade, topic, tags, file,ytlink } = req.body;
 
-  console.log("Received assignment notes:");
-  console.log("Title:", title);
-  console.log("Content:", editorContent);
-  console.log("Subject:", subject);
-  console.log("Class Grade:", classGrade);
-  console.log("Topic:", topic);
-  console.log("Tags:", tags);
-  // Here, you can add code to store the notes in a database
-  try{
-    let query = 'INSERT INTO assignment (title, editorContent, subject, classGrade, topic) VALUES (?, ?, ?, ?, ?)';
-    let values = [title, editorContent, subject, classGrade, topic]
-    connection.query(query,values,(error,result)=>{   
-        if(error) throw(error);
-        console.log(result);     
+  function toEmbedUrl(url) {
+    if (!url.includes("watch?v=")) return null;
+
+    const videoId = url.split("watch?v=")[1].split("&")[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  const Eytlink = toEmbedUrl(ytlink);
+
+  
+
+  try {
+    let fileBuffer = null;
+    let filename = null;
+    let filetype = null;
+    let filesize = null;
+
+
+    // If file exists → decode Base64 → prepare buffer
+    if (file && file.data) {
+      const base64Data = file.data.split(",")[1];
+      fileBuffer = Buffer.from(base64Data, "base64");
+
+      filename = file.name || null;
+      filetype = file.type || null;
+      filesize = file.size || null;
+    }
+
+    // Insert into DB — file fields may be NULL
+    let query = `
+      INSERT INTO assignment 
+      (title, editorContent, subject, classGrade, topic, file, filename, filetype, filesize, ytLink)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    let values = [
+      title,
+      editorContent,
+      subject,
+      classGrade,
+      topic,
+      fileBuffer,   // NULL if no file
+      filename,
+      filetype,
+      filesize,
+      Eytlink
+      
+    ];
+    console.log("File Buffer:", fileBuffer);
+    console.log("Filename:", filename);
+    console.log("Filetype:", filetype);
+    console.log("Filesize:", filesize);
+
+    connection.query(query, values, (error, result) => {
+      if (error) throw error;
+      console.log("DB Insert Result:", result);
+      res.json({ status: "success", message: "Notes saved (file optional)." });
     });
-  }
-  catch(e){
-    console.log(e);
-  }
 
-  res.json({ status: "success", message: "Notes received." });
+  } catch (e) {
+    console.log("Error:", e);
+    res.status(500).json({ status: "error", message: "Failed to save notes." });
+  }
 });
+
+
 
 //go to CONTENT.JSX and choice.jsx
 app.post("/assignmentnotesfetch",(req,res)=>{
-    let query = 'SELECT id, editorContent, title, subject, classGrade, topic, status FROM assignment';
+    let query = 'SELECT id, editorContent, title, subject, classGrade, topic, status, questions, file, filename, filetype, filesize, ytLink FROM assignment';
     try{
       connection.query(query,(error,result)=>{
           if(error) throw(error);
-          console.log(result);     //returns an array
+          console.log("THE RESULT IS: ",result);     //returns an array
           
           res.json(result);
       });
@@ -438,21 +481,35 @@ app.post("/saveQuestions", (req, res) => {
 
   let query = `UPDATE assignment SET questions = ? ORDER BY id DESC LIMIT 1`;
   let values = [sampleQuestions];
+  console.log(sampleQuestions);
 
   try{
-        connection.query(query,values,(error,result)=>{   
-            if(error) throw(error);
-            console.log(result);     //returns an array
-        });
-      } catch(e){
-        console.log(e);
-      }
+    connection.query(query,values,(error,result)=>{   
+        if(error) throw(error);
+        console.log("QUESTIONSAVED : ",result);     //returns an array
+    });
+  } catch(e){
+    console.log(e);
+  }
 });
 
     
 
 
-
+app.post("/saveScore",(req,res)=>{
+  let {id} =req.body;
+  id=id+1;
+  let query= `Update assignment set status='completed' where id = ? `
+  let values=[id];
+  try{
+    connection.query(query,values,(error,result)=>{   
+        if(error) throw(error);
+        console.log(result);     //returns an array
+    });
+  } catch(e){
+    console.log(e);
+  }
+})
 
 
 

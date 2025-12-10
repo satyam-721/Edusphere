@@ -44,7 +44,6 @@ async function embedAll(texts, opts = {}) {
   return embeddings;
 }
 
-/* ---------- similarity matrix ---------- */
 function similarityMatrix(embeddings) {
   const n = embeddings.length;
   const mat = Array.from({ length: n }, () => new Array(n).fill(0));
