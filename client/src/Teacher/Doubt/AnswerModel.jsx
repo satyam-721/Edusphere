@@ -16,7 +16,7 @@ export default function AnswerModel(props) {
 
       for (const el of blocks) {
         const strong = el.querySelector("strong");
-        const studentRaw = strong ? strong.textContent : "";
+        const studentRaw = strong ?strong.textContent : "";
         const student = studentRaw.replace(":", "").trim();
 
         // full text includes student and the doubt; remove the strong text to get the doubt

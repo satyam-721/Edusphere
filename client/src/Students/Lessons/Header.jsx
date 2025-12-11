@@ -37,28 +37,28 @@ export default function Header(){
 
 
     return(
-        <div className="lesson-header">
-                <div className="header-content">
-                    <h1 className="lesson-title">{title}</h1>
-                    <div className="lesson-meta">
-                        <div className="meta-item">
-                            <span>📚</span>
-                            <span>{subject}</span>
-                        </div>
-                        <div className="meta-item">
-                            <span>👨‍🏫</span>
-                            <span>Mr. Demo Teacher</span>
-                        </div>
-                        <div className="meta-item">
-                            <span>📅</span>
-                            <span>Posted: Dec 12, 2025</span>
-                        </div>
-                        <div className="meta-item">
-                            <span>⏱️</span>
-                            <span>No Time Limit</span>
-                        </div>
+        <div className="lesson-header" >
+            <div className="header-content stu">
+                <h1 className="lesson-title">{title}</h1>
+                <div className="lesson-meta">
+                    <div className="meta-item">
+                        <span>📚</span>
+                        <span>{subject}</span>
+                    </div>
+                    <div className="meta-item">
+                        <span>👨‍🏫</span>
+                        <span>Mr. Demo Teacher</span>
+                    </div>
+                    <div className="meta-item">
+                        <span>📅</span>
+                        <span>Posted: Dec 12, 2025</span>
+                    </div>
+                    <div className="meta-item">
+                        <span>⏱️</span>
+                        <span>No Time Limit</span>
                     </div>
                 </div>
             </div>
+        </div>
     )
 }

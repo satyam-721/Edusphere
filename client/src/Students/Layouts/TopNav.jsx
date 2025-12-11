@@ -1,27 +1,41 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { supabase } from "../../Auth/SupabaseClient"; 
+import { useNavigate } from 'react-router-dom';
 
-export default function TopNav(){
-    return(
-    <header className="header">
-        <nav className="nav">
-            <div className="nav-left">
-                <a href="#" className="logo">EduSphere</a>
-                <div className="breadcrumb">Teacher Dashboard</div>
-            </div>
-            <div className="nav-right">
-                <button className="nav-button notifications" title="Notifications">
-                    <span className="badge">3</span>
-                </button>
-                <button className="nav-button messages" title="Messages">
-                    <span className="badge">5</span>
-                </button>
-                <button className="nav-button settings" title="Settings"></button>
-                <div className="profile-menu">
-                    <div className="profile-avatar">JD</div>
-                    <span style={{fontWeight:500, color: "#202124"}}>John Doe</span>
-                    <span style={{color: "#5f6368", marginLeft: "0.25rem"}}>▼</span>
+
+export default function TopNav() {
+    const navigate = useNavigate();
+    async function handleLogout() {
+        await supabase.auth.signOut();  
+        navigate('/');     
+    }             
+    const [open, setOpen] = useState(false);
+
+    return (
+        <header className="header">
+            <nav className="nav">
+                <div className="nav-left">
+                    <Link style={{ textDecoration:'none', color:'inherit' }} to="/student" className="logo">LearnSphere</Link>
+                    <div className="breadcrumb">Student Dashboard</div>
                 </div>
-            </div>
-        </nav>
-    </header>
-    )
+
+                <div className="nav-right">
+                    <div 
+                        className="profile-menu"
+                        onClick={() => setOpen(!open)}
+                        style={{ cursor: "pointer", position: "relative" }}
+                    >
+                        <div className="profile-avatar">DT</div>
+                        <span style={{ fontWeight:500, color: "#202124" }}>Satyam</span>
+                        {open && (
+                            <div className="dropdown">
+                                <button className="logout-btn" onClick={handleLogout}>Logout</button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </nav>
+        </header>
+    );
 }

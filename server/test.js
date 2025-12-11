@@ -493,6 +493,44 @@ app.post("/saveQuestions", (req, res) => {
   }
 });
 
+app.post("/countAssignments",(req,res)=>{
+  let query='select status, count(*) as total from assignment group by status order by status desc';
+  try{
+    connection.query(query,(error,result)=>{
+        if(error) throw(error);
+        console.log(result);     //returns an array
+        res.json(result);
+    });
+  } catch(e){
+    console.log(e);
+  }
+});
+
+app.post("/countDoubts",(req,res)=>{
+  let query='select count(*) as total from doubt';
+  try{
+    connection.query(query,(error,result)=>{
+        if(error) throw(error);
+        console.log(result);     //returns an array
+        res.json(result);
+    });
+  } catch(e){
+    console.log(e);
+  }
+});
+
+app.post("/doubtSolved",(req,res)=>{
+  let query='select count(*) as total from doubt where type="resolved" ';
+  try{
+    connection.query(query,(error,result)=>{
+        if(error) throw(error);
+        console.log(result);     //returns an array
+        res.json(result);
+    });
+  } catch(e){
+    console.log(e);
+  }
+});
     
 
 

@@ -5,29 +5,35 @@ export default function SideNav(){
         <aside className="sidebar">
             <div className="sidebar-section">
                 <div className="sidebar-title">Navigation</div>
-                <a href="#" className="sidebar-item active">
-                    <div className="sidebar-icon">□</div>
-                    <span>Dashboard</span>
-                </a>
-                <a href="#" className="sidebar-item">
+               
+                    {/* <a href="#" className="sidebar-item active"> */}
+                    <Link to="/teacher" className="sidebar-item">
+                        <div className="sidebar-icon">□</div>
+                        <span>Dashboard</span>
+                    </Link>
+                    {/* </a> */}
+
+                <Link to="/teacher/upload" className="sidebar-item">
                     <div className="sidebar-icon">▤</div>
                     <span>My Classes</span>
-                </a>
+                </Link>
+                
                 <Link to="/teacher/doubt" className="sidebar-item">
                     <div className="sidebar-icon">○</div>
                     
-                    <span>Students</span>
+                    <span>Students Doubts</span>
                 </Link>
-                <a href="#" className="sidebar-item">
+
+                <Link to="/teacher/upload" className="sidebar-item">
                     <div className="sidebar-icon">◐</div>
                     <span>Assignments</span>
-                </a>
-                <a href="#" className="sidebar-item">
+                </Link>
+                {/* <a href="#" className="sidebar-item">
                     <div className="sidebar-icon">◒</div>
                     <span>Gradebook</span>
-                </a>
+                </a> */}
             </div>
-            <div className="sidebar-section">
+            {/* <div className="sidebar-section">
                 <div className="sidebar-title">Tools</div>
                 <a href="#" className="sidebar-item">
                     <div className="sidebar-icon">□</div>
@@ -45,7 +51,7 @@ export default function SideNav(){
                     <div className="sidebar-icon">◐</div>
                     <span>Analytics</span>
                 </a>
-            </div>
+            </div> */}
         </aside>
     )
 }

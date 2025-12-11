@@ -274,3 +274,66 @@
         input[type="file"] {
             display: none;
         }
+    
+
+.logout-btn {
+    width: 100%;
+    padding: 10px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.92rem;
+    color: #d32f2f; 
+    cursor: pointer;
+
+    /* Smooth UI animation */
+    transition: 
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.1s ease;
+}
+
+.logout-btn:hover {
+    background: rgba(211, 47, 47, 0.08);
+}
+
+.logout-btn:active {
+    background: rgba(211, 47, 47, 0.15);
+    transform: translateY(1px); 
+}
+
+.dropdown::before {
+    content: "";
+    display: block;
+    height: 1px;
+    background: #e5e7eb; 
+    margin: 4px 0 6px;
+}
+
+
+.dropdown {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    min-width: 160px;
+    background: #ffffff;
+    border-radius: 8px;
+
+    padding: 6px 0;
+    border: 1px solid #e4e4e7;
+
+    /* smoother, more premium shadow */
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        0 2px 4px rgba(0, 0, 0, 0.05);
+
+    animation: fadeIn 0.15s ease-out;
+}
+
+/* subtle dropdown animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

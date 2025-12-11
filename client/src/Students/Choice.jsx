@@ -181,7 +181,7 @@ export default function Choice() {
     console.log("%c✓ All systems ready", "color: #34a853; font-size: 11px;");
 
     const t = setTimeout(() => {
-      showNotification("info", "You have 2 assignments due this week!");
+      showNotification("info", "You have multiple assignments due this week!");
     }, 1000);
 
     return () => clearTimeout(t);
