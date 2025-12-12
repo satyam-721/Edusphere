@@ -21,7 +21,10 @@ dotenv.config();
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+// app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
 
 // Test GET route
 app.get("/", (req, res) => {
@@ -452,6 +455,7 @@ Additional Requirements:
 
         getQuestion(content).then(resultObj => {
           //output i am getting is string not json
+          console.log(resultObj.text);
           const jsonString = resultObj.text
             .replace(/```json\n?/g, '')
             .replace(/```/g, '')
@@ -549,7 +553,27 @@ app.post("/saveScore",(req,res)=>{
   }
 })
 
+app.post("/aianswer", async (req, res) => {
+  let {text} = req.body;
+  text=`I will give you a small piece of content. Your job is to generate a short, clear and simple answer based only on that content.
+If an example is necessary for understanding, include one briefly.
+Do not make the response long.
+Here is the content: `+text;
+  console.log("Received question for AI answer:", text);
 
+  try {
+    const answer = await askGemini(text); 
+    // const answer=text;
+    console.log("AI answer:", answer);
+
+    res.json({
+      answer
+    });
+  } catch (error) {
+    console.error("Error getting AI answer:", error);
+    res.status(500).json({ status: "error", message: "Failed to get AI answer." });
+  }
+});
 
 
 

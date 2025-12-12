@@ -4,12 +4,12 @@ export default function AnswerModel(props) {
   const [answerText, setAnswerText] = useState("");
 
   async function handleSend() {
-    // gather displayed doubts from the modal DOM
+
     const modalDoubtsEl = document.getElementById("modalDoubts");
     const questions = [];
 
     if (modalDoubtsEl) {
-      // select div blocks that contain a <strong> (the ones you inject)
+
       const blocks = Array.from(modalDoubtsEl.querySelectorAll("div")).filter(
         (el) => el.querySelector("strong")
       );
@@ -19,11 +19,12 @@ export default function AnswerModel(props) {
         const studentRaw = strong ?strong.textContent : "";
         const student = studentRaw.replace(":", "").trim();
 
-        // full text includes student and the doubt; remove the strong text to get the doubt
+        // full text includes student and the doubt
         let full = el.textContent || "";
         // Remove the strong text occurrence (student:)
         if (strong) {
           const strongText = strong.textContent;
+
           // remove first occurrence of strongText
           const idx = full.indexOf(strongText);
           if (idx !== -1) {
@@ -47,7 +48,6 @@ export default function AnswerModel(props) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // clusterId kept out as you requested
           answer: answerText,
           questions, // [{ student, doubt }, ...]
         }),

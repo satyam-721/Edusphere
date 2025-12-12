@@ -3,20 +3,21 @@ dotenv.config();
 
 import { GoogleGenAI } from "@google/genai";
 
-/* ---------- math utils ---------- */
 function dot(a, b) { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; }
 function norm(v) { return Math.sqrt(dot(v, v)) || 1; }
 function normalize(v) { const n = norm(v); return v.map(x => x / n); }
 function cosine(a, b) { return dot(a, b) / (norm(a) * norm(b)); }
 
-/* ---------- embed ALL texts (contents array) ---------- */
 async function embedAll(texts, opts = {}) {
   const apiKey = process.env.GOOGLE_GENAI_KEY;
   if (!apiKey) throw new Error("Set GOOGLE_GENAI_KEY env var");
 
   const model = opts.model || "gemini-embedding-001";
-  // preserved hard-coded key line per your request:
-  const ai = new GoogleGenAI({ apiKey: "" });    //CHECK THIS KEY
+
+
+
+  // REGULARLY CHANGE THIS API KEY , NHI THO LIMIT HOJAYEGA:
+  const ai = new GoogleGenAI({ apiKey: "AIzaSyCYEdMZlipeOYHJfZeQLIibHk-7EE4xyHE" });    //CHECK THIS KEY
 
   const payload = { model, contents: texts, taskType: "SEMANTIC_SIMILARITY" };
   const res = await ai.models.embedContent(payload);
@@ -44,12 +45,13 @@ async function embedAll(texts, opts = {}) {
   return embeddings;
 }
 
+//DOCUMENTATION SE MILA H THO THORA DEKH LENA ...... 
 function similarityMatrix(embeddings) {
   const n = embeddings.length;
   const mat = Array.from({ length: n }, () => new Array(n).fill(0));
   for (let i = 0; i < n; i++) {
     mat[i][i] = 1;
-    for (let j = i + 1; j < n; j++) {
+    for (let j = i + 1; j < n; j++) {                          //success
       const s = cosine(embeddings[i], embeddings[j]);
       mat[i][j] = mat[j][i] = s;
     }
@@ -92,10 +94,9 @@ function clusterByThresholdTransitive(texts, simMat, threshold = 0.7) {
   return groups;
 }
 
-/* ---------- exported function ---------- */
 /**
- * clusterStrings(texts, { threshold })
- * returns: array of groups (each group is array of strings)
+  clusterStrings(texts, { threshold })
+  returns: array of groups (each group is array of strings)
  */
 export async function clusterStrings(texts, opts = {}) {
   if (!Array.isArray(texts)) throw new Error("texts must be an array");

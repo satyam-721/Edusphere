@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function Content({ id }) {
+export default function Content({ id,handleTextSelection, handleTextDes }) {
   id = id - 1;
   const [fetchedNotes, setFetchedNotes] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
@@ -22,14 +22,13 @@ export default function Content({ id }) {
         }
         const data = await response.json();
         console.log("Fetched notes FROM CONTENT:", data[id]);
-        setFetchedNotes(data[id]); // store DB result
+        setFetchedNotes(data[id]); // 
       } catch (err) {
         console.error("Error fetching doubt types:", err);
       }
     })();
   }, []);
 
-  // When fetchedNotes changes, build a PDF URL
   useEffect(() => {
     if (!fetchedNotes || !fetchedNotes.file || !fetchedNotes.file.data) {
       setPdfUrl(null);
@@ -37,20 +36,60 @@ export default function Content({ id }) {
     }
 
     try {
-      const byteArray = new Uint8Array(fetchedNotes.file.data); // Buffer cahnges to  Uint8array (this is correct type of file byte)
+      const byteArray = new Uint8Array(fetchedNotes.file.data); 
       const blob = new Blob([byteArray], {
         type: fetchedNotes.filetype || "application/pdf",
       });
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);
-
-      // cleanup old URL when component unmounts / pdf changes
       return () => URL.revokeObjectURL(url);
     } catch (e) {
       console.error("Error creating PDF URL:", e);
       setPdfUrl(null);
     }
   }, [fetchedNotes]);
+
+  // Selection watcher for #notesContent
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      const sel = window.getSelection();
+      const container = document.getElementById("notesContent");
+
+      if (!sel || sel.isCollapsed) {
+        console.log("no selection");
+        handleTextDes();
+        return;
+      }
+
+      // guard: no ranges or no container
+      if (sel.rangeCount === 0 || !container) {
+        console.log("no selection");
+        handleTextDes();
+        
+        return;
+      }
+
+      try {
+        const range = sel.getRangeAt(0);
+        // If the selection intersects the notesContent container at all -> print the selection
+        if (range.intersectsNode(container)) {
+          // console.log(sel.toString());
+          handleTextSelection(sel.toString());
+        } else {
+          console.log("no selection");
+          handleTextDes();
+        }
+      } catch (e) {
+        console.log("no selection");
+        handleTextDes();
+      }
+    };
+
+    document.addEventListener("selectionchange", handleSelectionChange);
+    return () => {
+      document.removeEventListener("selectionchange", handleSelectionChange);
+    };
+  }, []);
 
   function switchContent(type) {
     const notesEl = document.getElementById("notesContent");
@@ -74,6 +113,7 @@ export default function Content({ id }) {
     <div className="content-section" id="contentSection">
       <h2 className="section-title">📖 Lesson Content</h2>
 
+      {/* Content is loading here!!!!!!!! */}
       <div className="content-viewer" id="notesContent">
         <div style={{ padding: "2rem" }}>
           {fetchedNotes ? (

@@ -1,6 +1,5 @@
 export default function UploadAssignment({cancelUpload,handleFileUpload,removeFile,toggleAIEnhancement}){
     return(
-        // <!-- Step 2: Upload Form for Assignment -->
         <div class="upload-form" id="assignmentForm">
             <h2 class="section-title">📝 Create Assignment</h2>
             
